@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vendor.information.stage.Controller">
+   <children>
+      <ToolBar prefHeight="40.0" prefWidth="200.0">
+        <items>
+          <Button fx:id="Button_insertButton" mnemonicParsing="false" onAction="#insertButtonClicked" text="新增">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/add.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="Button_deleteButton" disable="true" mnemonicParsing="false" onAction="#deleteButtonClicked" text="刪除">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/minus.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="Button_editButton" disable="true" mnemonicParsing="false" onAction="#editButtonClicked" text="修改">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="17.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/update.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="Button_saveButton" disable="true" mnemonicParsing="false" onAction="#saveButtonClicked" text="儲存">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/save.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="Button_quitButton" disable="true" mnemonicParsing="false" onAction="#quitButtonClicked" text="放棄">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/cancel.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="Button_leaveButton" mnemonicParsing="false" onAction="#leaveButtonClicked" text="結束">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/close.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+        </items>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <padding>
+            <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+         </padding>
+      </ToolBar>
+      <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="630.0" prefWidth="1120.0" style="-fx-background-color: #F8F8FF;">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <TableView fx:id="TableView_table" onMouseClicked="#tableOnClicked" VBox.vgrow="ALWAYS">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <columns>
+                        <TableColumn fx:id="TableColumm_id" editable="false" prefWidth="85.0" text="廠商編號" />
+                        <TableColumn fx:id="TableColumm_name" editable="false" prefWidth="170.0" sortable="false" text="廠商名稱" />
+                     </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
+                  <HBox spacing="10.0">
+                     <children>
+                        <Label alignment="CENTER" text="查詢">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="TextField_search" prefHeight="29.0" prefWidth="195.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextField>
+                     </children>
+                     <VBox.margin>
+                        <Insets left="10.0" top="10.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </VBox>
+            <VBox prefHeight="620.0" prefWidth="834.0" spacing="10.0">
+               <children>
+                  <HBox style="-fx-background-color: #5D686E; -fx-background-radius: 20;">
+                     <children>
+                        <Label text="廠商基本資料設定" textFill="GHOSTWHITE">
+                           <font>
+                              <Font size="30.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label fx:id="Lable_saveState" text="(*未儲存)" textFill="GHOSTWHITE" visible="false">
+                           <font>
+                              <Font size="30.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" text="廠商編號" textFill="#313f4d">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="TextField_id" editable="false" prefHeight="23.0" prefWidth="136.0" />
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" text="廠商統一編號" textFill="#313f4d">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="TextField_uniNumber" editable="false" prefHeight="23.0" prefWidth="142.0" />
+                     </children>
+                  </HBox>
+                  <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" text="廠商名稱" textFill="#313f4d">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="TextField_name" editable="false" prefHeight="23.0" prefWidth="389.0" />
+                     </children>
+                  </HBox>
+                  <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" text="發票抬頭" textFill="#313f4d">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="TextField_invoiceHeader" editable="false" prefHeight="23.0" prefWidth="389.0" />
+                     </children>
+                  </HBox>
+                  <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" text="負責人" textFill="#313f4d">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="TextField_manager" editable="false" prefHeight="23.0" prefWidth="128.0" />
+                     </children>
+                  </HBox>
+                  <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="91.0" text="電話號碼" textFill="#313f4d">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="TextField_phoneNumber" editable="false" prefHeight="23.0" prefWidth="128.0" />
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" text="分機" textFill="#313f4d">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="TextField_phoneExtension" editable="false" prefHeight="23.0" prefWidth="43.0" />
+                     </children>
+                  </HBox>
+                  <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" text="傳真號碼" textFill="#313f4d">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="TextField_faxNumber" editable="false" prefHeight="23.0" prefWidth="128.0" />
+                     </children>
+                  </HBox>
+                  <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" text="廠商地址" textFill="#313f4d">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="TextField_address" editable="false" prefHeight="23.0" prefWidth="389.0" />
+                     </children>
+                  </HBox>
+                  <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" text="電子信箱" textFill="#313f4d">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="TextField_emailAddress" editable="false" prefHeight="23.0" prefWidth="389.0" />
+                     </children>
+                  </HBox>
+                  <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" text="廠商網址" textFill="#313f4d">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="TextField_webSiteAddress" editable="false" prefHeight="23.0" prefWidth="389.0" />
+                     </children>
+                  </HBox>
+                  <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" text="備註" textFill="#313f4d">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="TextField_comment" editable="false" prefHeight="23.0" prefWidth="389.0" />
+                     </children>
+                  </HBox>
+               </children>
+               <HBox.margin>
+                  <Insets right="10.0" top="10.0" />
+               </HBox.margin>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</VBox>
