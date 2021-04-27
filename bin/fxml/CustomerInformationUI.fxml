@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="customer.inforamtion.stage.Controller">
+<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="customer.inforamtion.stage.Controller">
    <children>
       <ToolBar prefHeight="40.0" prefWidth="200.0">
         <items>
@@ -162,13 +167,13 @@
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="TextField_id" prefHeight="23.0" prefWidth="136.0" />
+                        <TextField fx:id="TextField_id" editable="false" prefHeight="23.0" prefWidth="136.0" />
                         <Label alignment="CENTER_RIGHT" contentDisplay="TOP" text="客戶統一編號" textFill="#313f4d">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="TextField_uniNumber" prefHeight="23.0" prefWidth="142.0" />
+                        <TextField fx:id="TextField_uniNumber" editable="false" prefHeight="23.0" prefWidth="142.0" />
                      </children>
                   </HBox>
                   <HBox spacing="10.0" VBox.vgrow="ALWAYS">
@@ -178,7 +183,7 @@
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="TextField_name" prefHeight="23.0" prefWidth="389.0" />
+                        <TextField fx:id="TextField_name" editable="false" prefHeight="23.0" prefWidth="389.0" />
                      </children>
                   </HBox>
                   <HBox spacing="10.0" VBox.vgrow="ALWAYS">
@@ -188,7 +193,7 @@
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="TextField_invoiceHeader" prefHeight="23.0" prefWidth="389.0" />
+                        <TextField fx:id="TextField_invoiceHeader" editable="false" prefHeight="23.0" prefWidth="389.0" />
                      </children>
                   </HBox>
                   <HBox spacing="10.0" VBox.vgrow="ALWAYS">
@@ -198,7 +203,7 @@
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="TextField_manager" prefHeight="23.0" prefWidth="128.0" />
+                        <TextField fx:id="TextField_manager" editable="false" prefHeight="23.0" prefWidth="128.0" />
                      </children>
                   </HBox>
                   <HBox spacing="10.0" VBox.vgrow="ALWAYS">
@@ -208,13 +213,13 @@
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="TextField_phoneNumber" prefHeight="23.0" prefWidth="126.0" />
+                        <TextField fx:id="TextField_phoneNumber" editable="false" prefHeight="23.0" prefWidth="126.0" />
                         <Label alignment="CENTER_RIGHT" contentDisplay="TOP" text="分機" textFill="#313f4d">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="TextField_phoneExtension" prefHeight="23.0" prefWidth="43.0" />
+                        <TextField fx:id="TextField_phoneExtension" editable="false" prefHeight="23.0" prefWidth="43.0" />
                      </children>
                   </HBox>
                   <HBox spacing="10.0" VBox.vgrow="ALWAYS">
@@ -224,13 +229,13 @@
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="TextField_faxNumber" prefHeight="23.0" prefWidth="128.0" />
+                        <TextField fx:id="TextField_faxNumber" editable="false" prefHeight="23.0" prefWidth="128.0" />
                         <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="113.0" text="手機號碼" textFill="#313f4d">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="TextField_cellPhoneNumber" prefHeight="23.0" prefWidth="128.0" />
+                        <TextField fx:id="TextField_cellPhoneNumber" editable="false" prefHeight="23.0" prefWidth="128.0" />
                      </children>
                   </HBox>
                   <HBox spacing="10.0" VBox.vgrow="ALWAYS">
@@ -240,7 +245,7 @@
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="TextField_address" prefHeight="23.0" prefWidth="389.0" />
+                        <TextField fx:id="TextField_address" editable="false" prefHeight="23.0" prefWidth="389.0" />
                      </children>
                   </HBox>
                   <HBox spacing="10.0" VBox.vgrow="ALWAYS">
@@ -250,7 +255,7 @@
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="TextField_emailAddress" prefHeight="23.0" prefWidth="389.0" />
+                        <TextField fx:id="TextField_emailAddress" editable="false" prefHeight="23.0" prefWidth="389.0" />
                      </children>
                   </HBox>
                   <HBox spacing="10.0" VBox.vgrow="ALWAYS">
@@ -260,7 +265,7 @@
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="TextField_webSiteAddress" prefHeight="23.0" prefWidth="389.0" />
+                        <TextField fx:id="TextField_webSiteAddress" editable="false" prefHeight="23.0" prefWidth="389.0" />
                      </children>
                   </HBox>
                   <HBox spacing="10.0" VBox.vgrow="ALWAYS">
@@ -270,7 +275,7 @@
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="TextField_comment" prefHeight="23.0" prefWidth="389.0" />
+                        <TextField fx:id="TextField_comment" editable="false" prefHeight="23.0" prefWidth="389.0" />
                      </children>
                   </HBox>
                </children>

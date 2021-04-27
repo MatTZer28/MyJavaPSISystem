@@ -320,6 +320,9 @@ public class Controller implements Initializable {
     	delStatement.execute();
     	delStatement.close();
     	
+    	Image avatarImage = new Image("/resources/avatar.png");
+    	ImageView_avatar.setImage(avatarImage);
+    	
     	clearAllTextField();
     	setTableItems();
     	
@@ -368,6 +371,9 @@ public class Controller implements Initializable {
     	
     	clearAllTextField();
     	setAllTextFieldEditable();
+    	
+    	Image avatarImage = new Image("/resources/avatar.png");
+    	ImageView_avatar.setImage(avatarImage);
     	
     	Button_insertButton.setDisable(true);
     	Button_deleteButton.setDisable(true);
@@ -490,6 +496,9 @@ public class Controller implements Initializable {
     	
     	clearAllTextField();
     	setAllTextFieldUneditable();
+    	
+    	Image avatarImage = new Image("/resources/avatar.png");
+    	ImageView_avatar.setImage(avatarImage);
     	
     	Button_insertButton.setDisable(false);
     	Button_leaveButton.setDisable(false);

@@ -7,6 +7,7 @@ import company.information.stage.CompanyInfomation;
 import customer.inforamtion.stage.CustomerInfomation;
 import empolyee.information.stage.EmpolyeeInfomation;
 import vendor.information.stage.VendorInfomation;
+import warehouse.setting.stage.WarehouseSetting;
 
 public class Controller {
 	
@@ -32,5 +33,11 @@ public class Controller {
 	public void customerInfoSettingButtonClicked(ActionEvent event) throws Exception {
 		main.Main.setCustomerInformationStage(new Stage());
 		new CustomerInfomation().launchScene(main.Main.getCustomerInformationStage());
+	}
+	
+	@FXML
+	public void warehouseSettingButtonClicked(ActionEvent event) throws Exception {
+		main.Main.setWarehouseSettingStage(new Stage());
+		new WarehouseSetting().launchScene(main.Main.getWarehouseSettingStage());
 	}
 }

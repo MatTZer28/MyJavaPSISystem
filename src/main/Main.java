@@ -19,6 +19,7 @@ public class Main extends Application {
 	private static Stage CustomerInformationStage;
 	private static Stage UnsavedAlertBoxStage;
 	private static Stage NullIdAlertBoxStage;
+	private static Stage WarehouseSettingStage;
 
 	private static Connection connection;
 	
@@ -84,11 +85,19 @@ public class Main extends Application {
 		NullIdAlertBoxStage = nullIdAlertBoxStage;
 	}
 
+	public static Stage getWarehouseSettingStage() {
+		return WarehouseSettingStage;
+	}
+
+	public static void setWarehouseSettingStage(Stage warehouseSettingStage) {
+		WarehouseSettingStage = warehouseSettingStage;
+	}
+
 	public void createConnectionToMySQLDataBase() {
 		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaclassproject2021", "root", "MatTZer9020");
+			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaclassproject2021", "root", "kevin*3700924");
 		} catch (ClassNotFoundException e) {
 			Logger.getLogger(main.Main.class.getName()).log(Level.SEVERE, null, e);
 		} catch (SQLException e) {
