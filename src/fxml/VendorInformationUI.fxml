@@ -10,7 +10,7 @@
 
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vendor.information.stage.Controller">
    <children>
-      <ToolBar prefHeight="40.0" prefWidth="200.0">
+      <ToolBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #252525;">
         <items>
           <Button fx:id="Button_insertButton" mnemonicParsing="false" onAction="#insertButtonClicked" text="新增">
                <font>
@@ -92,7 +92,7 @@
             <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
          </padding>
       </ToolBar>
-      <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="630.0" prefWidth="1120.0" style="-fx-background-color: #F8F8FF;">
+      <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="630.0" prefWidth="1120.0" style="-fx-background-color: #252525;">
          <children>
             <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                <children>
@@ -110,7 +110,7 @@
                   </TableView>
                   <HBox spacing="10.0">
                      <children>
-                        <Label alignment="CENTER" text="查詢">
+                        <Label alignment="CENTER" style="-fx-font-size: 20;" text="查詢">
                            <font>
                               <Font size="20.0" />
                            </font>
@@ -132,9 +132,9 @@
             </VBox>
             <VBox prefHeight="620.0" prefWidth="834.0" spacing="10.0">
                <children>
-                  <HBox style="-fx-background-color: #5D686E; -fx-background-radius: 20;">
+                  <HBox>
                      <children>
-                        <Label text="廠商基本資料設定" textFill="GHOSTWHITE">
+                        <Label style="-fx-font-size: 30;" text="廠商基本資料設定" textFill="GHOSTWHITE">
                            <font>
                               <Font size="30.0" />
                            </font>
@@ -154,13 +154,13 @@
                   </HBox>
                   <HBox spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" text="廠商編號" textFill="#313f4d">
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" style="-fx-font-size: 15;" text="廠商編號" textFill="#313f4d">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
                         <TextField fx:id="TextField_id" editable="false" prefHeight="23.0" prefWidth="136.0" />
-                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" text="廠商統一編號" textFill="#313f4d">
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" style="-fx-font-size: 15;" text="廠商統一編號" textFill="#313f4d">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -170,7 +170,7 @@
                   </HBox>
                   <HBox spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" text="廠商名稱" textFill="#313f4d">
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" style="-fx-font-size: 15;" text="廠商名稱" textFill="#313f4d">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -180,7 +180,7 @@
                   </HBox>
                   <HBox spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" text="發票抬頭" textFill="#313f4d">
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" style="-fx-font-size: 15;" text="發票抬頭" textFill="#313f4d">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -190,7 +190,7 @@
                   </HBox>
                   <HBox spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" text="負責人" textFill="#313f4d">
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" style="-fx-font-size: 15;" text="負責人" textFill="#313f4d">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -200,13 +200,13 @@
                   </HBox>
                   <HBox spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="91.0" text="電話號碼" textFill="#313f4d">
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="91.0" style="-fx-font-size: 15;" text="電話號碼" textFill="#313f4d">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
                         <TextField fx:id="TextField_phoneNumber" editable="false" prefHeight="23.0" prefWidth="128.0" />
-                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" text="分機" textFill="#313f4d">
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" style="-fx-font-size: 15;" text="分機" textFill="#313f4d">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -216,7 +216,7 @@
                   </HBox>
                   <HBox spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" text="傳真號碼" textFill="#313f4d">
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" style="-fx-font-size: 15;" text="傳真號碼" textFill="#313f4d">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -226,7 +226,7 @@
                   </HBox>
                   <HBox spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" text="廠商地址" textFill="#313f4d">
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" style="-fx-font-size: 15;" text="廠商地址" textFill="#313f4d">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -236,7 +236,7 @@
                   </HBox>
                   <HBox spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" text="電子信箱" textFill="#313f4d">
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" style="-fx-font-size: 15;" text="電子信箱" textFill="#313f4d">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -246,7 +246,7 @@
                   </HBox>
                   <HBox spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" text="廠商網址" textFill="#313f4d">
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" style="-fx-font-size: 15;" text="廠商網址" textFill="#313f4d">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -256,7 +256,7 @@
                   </HBox>
                   <HBox spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" text="備註" textFill="#313f4d">
+                        <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="90.0" style="-fx-font-size: 15;" text="備註" textFill="#313f4d">
                            <font>
                               <Font size="15.0" />
                            </font>

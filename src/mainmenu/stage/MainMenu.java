@@ -1,11 +1,12 @@
 package mainmenu.stage;
 
 import java.io.IOException;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import jfxtras.styles.jmetro.JMetro;
+import jfxtras.styles.jmetro.Style;
 
 public class MainMenu {
 	
@@ -38,11 +39,17 @@ public class MainMenu {
     public void launchScene(Stage stage) {
     	this.stage = stage;
     	
+    	setJMetroScene();
     	setStageToMaximizedSize();
     	setStageMinimizeSize();
     	setTitleToStage("進銷存系統");
     	setSceneToStage();
     	showStage();
+    }
+    
+    private void setJMetroScene() {
+    	JMetro jMetro = new JMetro(Style.DARK);
+    	jMetro.setScene(scene);
     }
     
     private void setStageToMaximizedSize() {

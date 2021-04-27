@@ -7,7 +7,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="300.0" style="-fx-background-color: #F8F8FF; -fx-background-radius: 5; -fx-border-color: #5D686E; -fx-border-width: 5; -fx-border-radius: 5;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="alertbox.nullid.stage.Controller">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="300.0" style="-fx-background-color: #252525;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="alertbox.nullid.stage.Controller">
    <bottom>
       <HBox alignment="CENTER_RIGHT" spacing="20.0" BorderPane.alignment="CENTER">
          <children>
@@ -25,12 +25,12 @@
    <center>
       <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
          <children>
-            <Label text="警告">
+            <Label style="-fx-font-size: 26;" text="警告">
                <font>
                   <Font size="26.0" />
                </font>
             </Label>
-            <Label text="編號不可為空值">
+            <Label style="-fx-font-size: 18;" text="編號不可為空值">
                <font>
                   <Font size="18.0" />
                </font>

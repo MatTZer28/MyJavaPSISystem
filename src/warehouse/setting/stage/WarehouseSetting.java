@@ -10,6 +10,8 @@ import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import jfxtras.styles.jmetro.JMetro;
+import jfxtras.styles.jmetro.Style;
 
 public class WarehouseSetting {
 	
@@ -42,6 +44,7 @@ public class WarehouseSetting {
     public void launchScene(Stage stage) {
     	this.stage = stage;
     	
+    	setJMetroScene();
     	setStageToMaximizedSize();
     	setStageMinimizeSize();
     	setStageCenterOnScreen();
@@ -49,6 +52,11 @@ public class WarehouseSetting {
     	initModalityOnStage();
     	setSceneToStage();
     	showStage();
+    }
+    
+    private void setJMetroScene() {
+    	JMetro jMetro = new JMetro(Style.DARK);
+    	jMetro.setScene(scene);
     }
     
     private void setStageToMaximizedSize() {
