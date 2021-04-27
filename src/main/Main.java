@@ -97,7 +97,7 @@ public class Main extends Application {
 		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaclassproject2021", "root", "kevin*3700924");
+			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaclassproject2021", "root", "MatTZer9020");
 		} catch (ClassNotFoundException e) {
 			Logger.getLogger(main.Main.class.getName()).log(Level.SEVERE, null, e);
 		} catch (SQLException e) {
