@@ -13,6 +13,7 @@ import mainmenu.stage.MainMenu;
 
 public class Main extends Application {
 	
+	private static Stage PrimaryStage;
 	private static Stage CompanyInfomationStage;
 	private static Stage VendorInformationStage;
 	private static Stage EmpolyeeInformationStage;
@@ -20,6 +21,7 @@ public class Main extends Application {
 	private static Stage UnsavedAlertBoxStage;
 	private static Stage NullIdAlertBoxStage;
 	private static Stage WarehouseSettingStage;
+	private static Stage productSettingStage;
 
 	private static Connection connection;
 	
@@ -29,14 +31,22 @@ public class Main extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		new MainMenu().launchScene(primaryStage);
-		
+		setPrimaryStage(primaryStage);
+		new MainMenu().launchScene(getPrimaryStage());
 		
 		createConnectionToMySQLDataBase();
 		
 		
 	}
 	
+	public static Stage getPrimaryStage() {
+		return PrimaryStage;
+	}
+
+	public static void setPrimaryStage(Stage primaryStage) {
+		PrimaryStage = primaryStage;
+	}
+
 	public static Stage getCompanyInfomationStage() {
 		return CompanyInfomationStage;
 	}
@@ -91,6 +101,14 @@ public class Main extends Application {
 
 	public static void setWarehouseSettingStage(Stage warehouseSettingStage) {
 		WarehouseSettingStage = warehouseSettingStage;
+	}
+
+	public static Stage getProductSettingStage() {
+		return productSettingStage;
+	}
+
+	public static void setProductSettingStage(Stage productSettingStage) {
+		Main.productSettingStage = productSettingStage;
 	}
 
 	public void createConnectionToMySQLDataBase() {

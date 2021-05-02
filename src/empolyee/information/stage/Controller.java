@@ -320,11 +320,11 @@ public class Controller implements Initializable {
     	delStatement.execute();
     	delStatement.close();
     	
-    	Image avatarImage = new Image("/resources/avatar.png");
-    	ImageView_avatar.setImage(avatarImage);
-    	
     	clearAllTextField();
     	setTableItems();
+    	
+    	Image avatarImage = new Image("/resources/avatar.png");
+    	ImageView_avatar.setImage(avatarImage);
     	
     	Button_deleteButton.setDisable(true);
     	Button_editButton.setDisable(true);
