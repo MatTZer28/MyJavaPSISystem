@@ -99,6 +99,28 @@ CREATE TABLE `empolyeeinformation` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `product`
+--
+
+DROP TABLE IF EXISTS `product`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `product` (
+  `ProductID` varchar(10) NOT NULL,
+  `Name` varchar(20) DEFAULT NULL,
+  `Specification` varchar(20) DEFAULT NULL,
+  `Type` varchar(20) DEFAULT NULL,
+  `Unit` varchar(5) DEFAULT NULL,
+  `Total` int unsigned DEFAULT NULL,
+  `Cost` int unsigned DEFAULT NULL,
+  `SellPrice` int unsigned DEFAULT NULL,
+  `SafeAmount` int unsigned DEFAULT NULL,
+  `VendorName` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`ProductID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `vendorinformation`
 --
 
@@ -121,6 +143,23 @@ CREATE TABLE `vendorinformation` (
   PRIMARY KEY (`VendorID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `warehouse`
+--
+
+DROP TABLE IF EXISTS `warehouse`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `warehouse` (
+  `WarehouseID` varchar(10) NOT NULL,
+  `Name` varchar(20) DEFAULT NULL,
+  `Address` varchar(50) DEFAULT NULL,
+  `PhoneNumber` varchar(20) DEFAULT NULL,
+  `FaxNumber` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`WarehouseID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -131,4 +170,4 @@ CREATE TABLE `vendorinformation` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-26 21:45:34
+-- Dump completed on 2021-05-05  1:13:48
