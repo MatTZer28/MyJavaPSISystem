@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
 
+import com.sun.org.apache.xml.internal.utils.ListingErrorHandler;
+
 import alertbox.nullid.stage.NullIDAlertBox;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -31,29 +33,29 @@ public class Controller implements Initializable {
 	private TextField TextField_search;
 	
 	@FXML
-	private TableView<productDataForTable> TableView_productTable;
+	private TableView<ProductDataForTable> TableView_productTable;
 	@FXML
 	private TableView<?> TableView_warehouseTable;
 	@FXML
-    private TableColumn<productDataForTable, String> TableColumn_id;
+    private TableColumn<ProductDataForTable, String> TableColumn_id;
 	@FXML
-    private TableColumn<productDataForTable, String> TableColumn_name;
+    private TableColumn<ProductDataForTable, String> TableColumn_name;
 	@FXML
-    private TableColumn<productDataForTable, String> TableColumn_specification;
+    private TableColumn<ProductDataForTable, String> TableColumn_specification;
 	@FXML
-    private TableColumn<productDataForTable, String> TableColumn_type;
+    private TableColumn<ProductDataForTable, String> TableColumn_type;
 	@FXML
-    private TableColumn<productDataForTable, String> TableColumn_unit;
+    private TableColumn<ProductDataForTable, String> TableColumn_unit;
 	@FXML
-    private TableColumn<productDataForTable, String> TableColumn_total;
+    private TableColumn<ProductDataForTable, String> TableColumn_total;
 	@FXML
-    private TableColumn<productDataForTable, String> TableColumn_cost;
+    private TableColumn<ProductDataForTable, String> TableColumn_cost;
 	@FXML
-    private TableColumn<productDataForTable, String> TableColumn_sellPrice;
+    private TableColumn<ProductDataForTable, String> TableColumn_sellPrice;
 	@FXML
-    private TableColumn<productDataForTable, String> TableColumn_safeAmount;
+    private TableColumn<ProductDataForTable, String> TableColumn_safeAmount;
 	@FXML
-    private TableColumn<productDataForTable, ChoiceBox<String>> TableColumn_vendor;
+    private TableColumn<ProductDataForTable, ChoiceBox<String>> TableColumn_vendor;
 	@FXML
     private TableColumn<?, String> TableColumn_wId;
 	@FXML
@@ -73,6 +75,10 @@ public class Controller implements Initializable {
 	private Button Button_quitButton;
 	@FXML
 	private Button Button_leaveButton;
+	@FXML
+	private Button Button_newSpace;
+	@FXML
+	private Button Button_deleteSpace;
 	
 	private ResultSet resultsetForTable;
 	
@@ -106,9 +112,9 @@ public class Controller implements Initializable {
 		TableView_productTable.setItems(getProductData());
     }
     
-    public ObservableList<productDataForTable> getProductData() {
+    public ObservableList<ProductDataForTable> getProductData() {
     	retriveDataFromDBForTableWithSQLExceptionByTableName("product");
-    	ObservableList<productDataForTable> products = FXCollections.observableArrayList();
+    	ObservableList<ProductDataForTable> products = FXCollections.observableArrayList();
     	try {
 			do {
 				Integer total = resultsetForTable.getInt(6);
@@ -116,7 +122,7 @@ public class Controller implements Initializable {
 				Integer sellPrice = resultsetForTable.getInt(8);
 				Integer safeAmount = resultsetForTable.getInt(9);
 				
-				products.add(new productDataForTable(resultsetForTable.getString(1), resultsetForTable.getString(2), resultsetForTable.getString(3), resultsetForTable.getString(4), resultsetForTable.getString(5), total.toString(),  cost.toString(),  sellPrice.toString(), safeAmount.toString(), resultsetForTable.getString(10)));
+				products.add(new ProductDataForTable(resultsetForTable.getString(1), resultsetForTable.getString(2), resultsetForTable.getString(3), resultsetForTable.getString(4), resultsetForTable.getString(5), total.toString(),  cost.toString(),  sellPrice.toString(), safeAmount.toString(), resultsetForTable.getString(10)));
 			} while(resultsetForTable.next());
 		} catch (SQLException e) {
 			return FXCollections.observableArrayList();
@@ -124,7 +130,7 @@ public class Controller implements Initializable {
 		return products;
     }
     
-    public static class productDataForTable {
+    public static class ProductDataForTable {
     	private String productId;
 		private String name;
     	private String specification;
@@ -138,7 +144,7 @@ public class Controller implements Initializable {
     	
     	private ResultSet resultsetForChoiceBox;
     	
-    	productDataForTable(String productId, String name, String specification, String type, String unit, String total, String cost, String sellPrice, String safeAmount, String vendor) {
+    	ProductDataForTable(String productId, String name, String specification, String type, String unit, String total, String cost, String sellPrice, String safeAmount, String vendor) {
 			this.productId = productId;
 			this.name = name;
 			this.specification = specification;
@@ -245,9 +251,9 @@ public class Controller implements Initializable {
     	TableView_productTable.setItems(getComparedDataWtihTargetValue(targetValue));
     }
     
-    public ObservableList<productDataForTable> getComparedDataWtihTargetValue(String targetValue) {
+    public ObservableList<ProductDataForTable> getComparedDataWtihTargetValue(String targetValue) {
     	retriveDataFromDBForTableWithSQLExceptionByTableName("product");
-    	ObservableList<productDataForTable> products = FXCollections.observableArrayList();
+    	ObservableList<ProductDataForTable> products = FXCollections.observableArrayList();
     	try {
 			do {
 				if (resultsetForTable.getString(1).contains(targetValue) || resultsetForTable.getString(2).contains(targetValue) || resultsetForTable.getString(3).contains(targetValue) || resultsetForTable.getString(4).contains(targetValue) || resultsetForTable.getString(10).contains(targetValue)) {
@@ -256,7 +262,7 @@ public class Controller implements Initializable {
 					Integer sellPrice = resultsetForTable.getInt(8);
 					Integer safeAmount = resultsetForTable.getInt(9);
 					
-					products.add(new productDataForTable(resultsetForTable.getString(1), resultsetForTable.getString(2), resultsetForTable.getString(3), resultsetForTable.getString(4), resultsetForTable.getString(5), total.toString(),  cost.toString(),  sellPrice.toString(), safeAmount.toString(), resultsetForTable.getString(10)));
+					products.add(new ProductDataForTable(resultsetForTable.getString(1), resultsetForTable.getString(2), resultsetForTable.getString(3), resultsetForTable.getString(4), resultsetForTable.getString(5), total.toString(),  cost.toString(),  sellPrice.toString(), safeAmount.toString(), resultsetForTable.getString(10)));
 				}
 			} while(resultsetForTable.next());
 		} catch (SQLException e) {
@@ -267,19 +273,21 @@ public class Controller implements Initializable {
 	
 	@FXML
 	public void productTableOnClicked() {
-		
-		if (isSaved == true) {
     		retriveDataFromDBForTableWithSQLExceptionByTableName("product");
     		ShowSelectedDataToTableWithSQLException();
-    	}
 	}
 	
 	public void ShowSelectedDataToTableWithSQLException() {
     	try {
 			do {
 				if (getTableSelectedIdWithNullPointerException().equals(resultsetForTable.getString(1))) {
-					Button_deleteButton.setDisable(false);
-					Button_editButton.setDisable(false);
+					if (isSaved == true) {
+						Button_deleteButton.setDisable(false);
+						Button_editButton.setDisable(false);
+					}
+					if (isSaved == false) {
+						Button_newSpace.setDisable(false);
+					}
 					break;
 				}
 			} while(resultsetForTable.next());
@@ -318,7 +326,7 @@ public class Controller implements Initializable {
 	}
 	
 	public void createNewRowInTable() {
-    	TableView_productTable.getItems().add(new productDataForTable("點此新增產品編號...", "點此新增產品名稱...", "點此新增產品規格...", "點此新增類型...", "點此新增單位...", "0", "0", "0", "0", "點此選擇供應廠商"));
+    	TableView_productTable.getItems().add(new ProductDataForTable("點此新增產品編號...", "點此新增產品名稱...", "點此新增產品規格...", "點此新增類型...", "點此新增單位...", "0", "0", "0", "0", "點此選擇供應廠商"));
     	TableView_productTable.setItems(TableView_productTable.getItems());
     }
     
@@ -408,7 +416,7 @@ public class Controller implements Initializable {
 
 	@FXML
 	public void saveButtonClicked() {
-		for(productDataForTable rowItems : TableView_productTable.getItems()) {
+		for(ProductDataForTable rowItems : TableView_productTable.getItems()) {
     		if (rowItems.getProductId() == "") {
     			showNullIDAlertBoxWithException();
     			return;
@@ -431,7 +439,9 @@ public class Controller implements Initializable {
     	
     	Button_saveButton.setDisable(true);
     	Button_quitButton.setDisable(true);
-	}
+    	Button_newSpace.setDisable(true);
+    	Button_deleteSpace.setDisable(true);
+    }
 	
 	public void showNullIDAlertBoxWithException() {
     	try {
@@ -482,7 +492,7 @@ public class Controller implements Initializable {
     	TableColumn_safeAmount.setCellFactory(param -> new UpdataedTableCell());
     }
     
-    private class UpdataedTableCell extends TableCell<productDataForTable, String> {
+    private class UpdataedTableCell extends TableCell<ProductDataForTable, String> {
         @Override
         protected void updateItem(String item, boolean empty) {
             super.updateItem(item, empty);
@@ -513,11 +523,77 @@ public class Controller implements Initializable {
     	
     	Button_saveButton.setDisable(true);
     	Button_quitButton.setDisable(true);
+    	Button_newSpace.setDisable(true);
+    	Button_deleteSpace.setDisable(true);
 	}
     
 	@FXML
 	public void leaveButtonClicked() throws SQLException {
 		resultsetForTable.close();
 		main.Main.getProductSettingStage().close();
+	}
+	
+	@FXML
+	public void newSpaceButtonClicked() {
+		
+	}
+	
+	public static class ProdouctStoreInWarehouseDataForTable {
+		private String warehouseID;
+		private ChoiceBox<String> warehouseName;
+		private String amount;
+		
+    	private ResultSet resultsetForChoiceBox;
+		
+		public ProdouctStoreInWarehouseDataForTable(String warehouseId, String warehouseName, String amount) {
+			this.warehouseID = warehouseId;
+			this.amount = amount;
+			
+			this.warehouseName = new ChoiceBox<String>();
+			this.warehouseName.setItems(getWarehouseData());
+			this.warehouseName.setValue(warehouseName);
+			this.warehouseName.setDisable(true);
+		}
+    	
+    	public ObservableList<String> getWarehouseData() {
+    		retriveDataFromDBChoiceBoxWithSQLExceptionByTableName("warehouse");
+    		ObservableList<String> options = FXCollections.observableArrayList();
+    		try {
+    			do {
+    				options.add(resultsetForChoiceBox.getString(2));
+    			} while(resultsetForChoiceBox.next());
+    		} catch (SQLException e) {
+    			return FXCollections.observableArrayList();
+    		}
+    		return options;
+    	}
+    	
+    	public void retriveDataFromDBChoiceBoxWithSQLExceptionByTableName(String tableName) {
+        	try {
+    			retriveDataFromDBChoiceBoxByTableName(tableName);
+    		} catch (SQLException e) {
+    			e.printStackTrace();
+    		}
+        }
+        
+        public void retriveDataFromDBChoiceBoxByTableName(String tableName) throws SQLException {
+        	Statement statement = main.Main.getConnection().createStatement();
+        	resultsetForChoiceBox = statement.executeQuery("SELECT * FROM javaclassproject2021." + tableName);
+        	resultsetForChoiceBox.next();
+        }
+
+		public String getWarehouseID() { return warehouseID; }
+		public void setWarehouseID(String warehouseID) { this.warehouseID = warehouseID; }
+
+		public ChoiceBox<String> getWarehouseName() { return warehouseName; }
+		public void setWarehouseName(ChoiceBox<String> warehouseName) { this.warehouseName = warehouseName; }
+
+		public String getAmount() { return amount; }
+		public void setAmount(String amount) { this.amount = amount; }
+	}
+	
+	@FXML
+	public void deleteSpaceButtonClicked() {
+		
 	}
 }
