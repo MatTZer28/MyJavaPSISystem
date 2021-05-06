@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.23, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.24, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: javaclassproject2021
+-- Host: localhost    Database: javaclassproject2021
 -- ------------------------------------------------------
--- Server version	8.0.23
+-- Server version	8.0.24
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -40,6 +40,16 @@ CREATE TABLE `companyinformation` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `companyinformation`
+--
+
+LOCK TABLES `companyinformation` WRITE;
+/*!40000 ALTER TABLE `companyinformation` DISABLE KEYS */;
+INSERT INTO `companyinformation` VALUES (1,'','','','','','','','','','','');
+/*!40000 ALTER TABLE `companyinformation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `customerinformation`
 --
 
@@ -63,6 +73,15 @@ CREATE TABLE `customerinformation` (
   PRIMARY KEY (`CustomerID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customerinformation`
+--
+
+LOCK TABLES `customerinformation` WRITE;
+/*!40000 ALTER TABLE `customerinformation` DISABLE KEYS */;
+/*!40000 ALTER TABLE `customerinformation` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `empolyeeinformation`
@@ -99,6 +118,15 @@ CREATE TABLE `empolyeeinformation` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `empolyeeinformation`
+--
+
+LOCK TABLES `empolyeeinformation` WRITE;
+/*!40000 ALTER TABLE `empolyeeinformation` DISABLE KEYS */;
+/*!40000 ALTER TABLE `empolyeeinformation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `product`
 --
 
@@ -119,6 +147,42 @@ CREATE TABLE `product` (
   PRIMARY KEY (`ProductID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `product`
+--
+
+LOCK TABLES `product` WRITE;
+/*!40000 ALTER TABLE `product` DISABLE KEYS */;
+/*!40000 ALTER TABLE `product` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `productstoreinwarehouse`
+--
+
+DROP TABLE IF EXISTS `productstoreinwarehouse`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `productstoreinwarehouse` (
+  `ProductID` varchar(10) DEFAULT NULL,
+  `WarehouseID` varchar(10) DEFAULT NULL,
+  `Amount` int DEFAULT NULL,
+  KEY `WarehouseID_idx` (`WarehouseID`) /*!80000 INVISIBLE */,
+  KEY `ProductID` (`ProductID`),
+  CONSTRAINT `ProductID` FOREIGN KEY (`ProductID`) REFERENCES `product` (`ProductID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `WarehouseID` FOREIGN KEY (`WarehouseID`) REFERENCES `warehouse` (`WarehouseID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `productstoreinwarehouse`
+--
+
+LOCK TABLES `productstoreinwarehouse` WRITE;
+/*!40000 ALTER TABLE `productstoreinwarehouse` DISABLE KEYS */;
+/*!40000 ALTER TABLE `productstoreinwarehouse` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `vendorinformation`
@@ -145,6 +209,16 @@ CREATE TABLE `vendorinformation` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `vendorinformation`
+--
+
+LOCK TABLES `vendorinformation` WRITE;
+/*!40000 ALTER TABLE `vendorinformation` DISABLE KEYS */;
+INSERT INTO `vendorinformation` VALUES ('123','00000000','aaa','','','','','','','','',''),('321','00000000','bbb','','','','','','','','','');
+/*!40000 ALTER TABLE `vendorinformation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `warehouse`
 --
 
@@ -160,6 +234,15 @@ CREATE TABLE `warehouse` (
   PRIMARY KEY (`WarehouseID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `warehouse`
+--
+
+LOCK TABLES `warehouse` WRITE;
+/*!40000 ALTER TABLE `warehouse` DISABLE KEYS */;
+/*!40000 ALTER TABLE `warehouse` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -170,4 +253,4 @@ CREATE TABLE `warehouse` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-05  1:13:48
+-- Dump completed on 2021-05-06 18:52:36

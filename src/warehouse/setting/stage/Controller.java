@@ -236,7 +236,7 @@ public class Controller implements Initializable {
     }
     
     public void createNewRowInTable() {
-    	TableView_warehouseTable.getItems().add(new warehouseDataForTable("點此新增倉庫編號...", "點此新增倉庫名稱...", "點此新增倉庫地址...", "點此新增倉庫電話號碼...", "點此新增倉庫傳真號碼..."));
+    	TableView_warehouseTable.getItems().add(new warehouseDataForTable("", "", "", "", ""));
     	TableView_warehouseTable.setItems(TableView_warehouseTable.getItems());
     }
     
