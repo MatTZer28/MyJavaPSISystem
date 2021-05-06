@@ -305,7 +305,8 @@ public class Controller implements Initializable {
         		@Override
         		public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
         			try {
-        	    		  warehouseName = retriveWarehouseNameFromDB();
+        				System.out.println("Hi");
+        				warehouseName = retriveWarehouseNameFromDB();
         			} catch (SQLException e) {
 						e.printStackTrace();
 					}
@@ -384,8 +385,8 @@ public class Controller implements Initializable {
 						setWarehouseTableItems();
 						setChoiceBoxInWarehouseTableEnable();
 						createTextFieldToWarehouseTableColumn();
-						oldProductId = getTableSelectedIdWithNullPointerException();
 					}
+					oldProductId = getTableSelectedIdWithNullPointerException();
 					break;
 				}
 			} while(resultsetForProductTable.next());
