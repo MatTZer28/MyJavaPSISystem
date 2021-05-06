@@ -376,14 +376,16 @@ public class Controller implements Initializable {
 					if (isSaved == true) {
 						Button_deleteButton.setDisable(false);
 						Button_editButton.setDisable(false);
+						setWarehouseTableItems();
 					}
 					if (isSaved == false) {	
 						Button_newSpace.setDisable(false);
-						
 						updateWarehouseTableDataToDBWithSQLException();
+						setWarehouseTableItems();
+						setChoiceBoxInWarehouseTableEnable();
+						createTextFieldToWarehouseTableColumn();
 						oldProductId = getTableSelectedIdWithNullPointerException();
 					}
-					setWarehouseTableItems();
 					break;
 				}
 			} while(resultsetForProductTable.next());
@@ -402,7 +404,7 @@ public class Controller implements Initializable {
 	
 	public void updateWarehouseTableDataToDB() throws SQLException {		
 	    for (int i = 0; i < TableView_warehouseTable.getItems().size(); i++) {
-	    	PreparedStatement statement = main.Main.getConnection().prepareStatement("INSERT INTO javaclassproject2021.productstoreinwarehouse VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE ");
+	    	PreparedStatement statement = main.Main.getConnection().prepareStatement("REPLACE INTO javaclassproject2021.productstoreinwarehouse VALUES (?, ?, ?)");
 	    	statement.setString(1, oldProductId);
 	    	statement.setString(2, TableView_warehouseTable.getItems().get(i).getWarehouseId().getValue());
 	    	statement.setString(3, TableView_warehouseTable.getItems().get(i).getAmount());
@@ -564,6 +566,7 @@ public class Controller implements Initializable {
     	isSaved = false;
     	
     	createTextFieldToProductTableColumn();
+    	createTextFieldToWarehouseTableColumn();
     	
     	Button_saveButton.setDisable(false);
     	Button_quitButton.setDisable(false);

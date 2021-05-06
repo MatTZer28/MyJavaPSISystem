@@ -154,6 +154,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
+INSERT INTO `product` VALUES ('15','','','','',0,0,0,0,''),('24','番茄','','','',0,0,0,0,'');
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -165,13 +166,13 @@ DROP TABLE IF EXISTS `productstoreinwarehouse`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `productstoreinwarehouse` (
-  `ProductID` varchar(10) DEFAULT NULL,
-  `WarehouseID` varchar(10) DEFAULT NULL,
+  `ProductID` varchar(10) NOT NULL,
+  `WarehouseID` varchar(10) NOT NULL,
   `Amount` int DEFAULT NULL,
+  PRIMARY KEY (`ProductID`,`WarehouseID`),
   KEY `WarehouseID_idx` (`WarehouseID`) /*!80000 INVISIBLE */,
-  KEY `ProductID` (`ProductID`),
   CONSTRAINT `ProductID` FOREIGN KEY (`ProductID`) REFERENCES `product` (`ProductID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `WarehouseID` FOREIGN KEY (`WarehouseID`) REFERENCES `warehouse` (`WarehouseID`)
+  CONSTRAINT `WarehouseID` FOREIGN KEY (`WarehouseID`) REFERENCES `warehouse` (`WarehouseID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -181,6 +182,7 @@ CREATE TABLE `productstoreinwarehouse` (
 
 LOCK TABLES `productstoreinwarehouse` WRITE;
 /*!40000 ALTER TABLE `productstoreinwarehouse` DISABLE KEYS */;
+INSERT INTO `productstoreinwarehouse` VALUES ('24','123456',200);
 /*!40000 ALTER TABLE `productstoreinwarehouse` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -241,6 +243,7 @@ CREATE TABLE `warehouse` (
 
 LOCK TABLES `warehouse` WRITE;
 /*!40000 ALTER TABLE `warehouse` DISABLE KEYS */;
+INSERT INTO `warehouse` VALUES ('123456','my warehouse','','','');
 /*!40000 ALTER TABLE `warehouse` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -253,4 +256,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-06 18:52:36
+-- Dump completed on 2021-05-06 19:40:28
