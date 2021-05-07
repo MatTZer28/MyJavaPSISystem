@@ -1,11 +1,14 @@
 package warehouse.setting.stage;
 
+import java.lang.invoke.StringConcatFactory;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
+
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
 
 import alertbox.nullid.stage.NullIDAlertBox;
 import javafx.beans.value.ChangeListener;
@@ -31,27 +34,27 @@ public class Controller implements Initializable {
 	private TextField TextField_search;
 	
     @FXML
-    private TableView<warehouseDataForTable> TableView_warehouseTable;
+    private TableView<WarehouseDataForTable> TableView_warehouseTable;
     @FXML
-    private TableView<?> TableView_productTable;
+    private TableView<ProductDataForTable> TableView_productTable;
     @FXML
-    private TableColumn<warehouseDataForTable, String> TableColumn_id;
+    private TableColumn<WarehouseDataForTable, String> TableColumn_id;
     @FXML
-    private TableColumn<warehouseDataForTable, String> TableColumn_name;
+    private TableColumn<WarehouseDataForTable, String> TableColumn_name;
     @FXML
-    private TableColumn<warehouseDataForTable, String> TableColumn_address;
+    private TableColumn<WarehouseDataForTable, String> TableColumn_address;
     @FXML
-    private TableColumn<warehouseDataForTable, String> TableColumn_phoneNumber;
+    private TableColumn<WarehouseDataForTable, String> TableColumn_phoneNumber;
     @FXML
-    private TableColumn<warehouseDataForTable, String> TableColumn_faxNumber;
+    private TableColumn<WarehouseDataForTable, String> TableColumn_faxNumber;
     @FXML
-    private TableColumn<warehouseDataForTable, String> TableColumn_pId;
+    private TableColumn<ProductDataForTable, String> TableColumn_pId;
     @FXML
-    private TableColumn<?, String> TableColumn_pName;
+    private TableColumn<ProductDataForTable, String> TableColumn_pName;
     @FXML
-    private TableColumn<?, String> TableColumn_pUnit;
+    private TableColumn<ProductDataForTable, String> TableColumn_pUnit;
     @FXML
-    private TableColumn<?, Integer> TableColumn_pInventory;
+    private TableColumn<ProductDataForTable, Integer> TableColumn_pInventory;
     
     @FXML
     private Button Button_insertButton;
@@ -66,13 +69,16 @@ public class Controller implements Initializable {
     @FXML
     private Button Button_leaveButton;
     
-    private ResultSet resultsetForTable;
+    private ResultSet resultsetForWarehouseTable;
+    
+    private ResultSet resultsetForProductTable;
     
     private boolean isSaved = true;
     
     @Override
 	public void initialize(URL location, ResourceBundle resources) {
     	initDataToWarehouseTable();
+    	setProductTableColumn();
     	addListenerToTextField_search();
 	}
     
@@ -93,27 +99,27 @@ public class Controller implements Initializable {
     	TableView_warehouseTable.setItems(getWarehouseData());
     }
     
-    public ObservableList<warehouseDataForTable> getWarehouseData() {
+    public ObservableList<WarehouseDataForTable> getWarehouseData() {
     	retriveDataFromDBForTableWithSQLExceptionByTableName("warehouse");
-    	ObservableList<warehouseDataForTable> warehouses = FXCollections.observableArrayList();
+    	ObservableList<WarehouseDataForTable> warehouses = FXCollections.observableArrayList();
     	try {
 			do {
-				warehouses.add(new warehouseDataForTable(resultsetForTable.getString(1), resultsetForTable.getString(2), resultsetForTable.getString(3), resultsetForTable.getString(4), resultsetForTable.getString(5)));
-			} while(resultsetForTable.next());
+				warehouses.add(new WarehouseDataForTable(resultsetForWarehouseTable.getString(1), resultsetForWarehouseTable.getString(2), resultsetForWarehouseTable.getString(3), resultsetForWarehouseTable.getString(4), resultsetForWarehouseTable.getString(5)));
+			} while(resultsetForWarehouseTable.next());
 		} catch (SQLException e) {
 			return FXCollections.observableArrayList();
 		}
 		return warehouses;
     }
     
-    public static class warehouseDataForTable {
+    public static class WarehouseDataForTable {
     	private String warehouseId;
 		private String name;
     	private String address;
     	private String phoneNumber;
     	private String faxNumber;
     	
-    	warehouseDataForTable(String warehouseId, String name, String address, String phoneNumber, String faxNumber) {
+    	WarehouseDataForTable(String warehouseId, String name, String address, String phoneNumber, String faxNumber) {
 			this.warehouseId = warehouseId;
 			this.name = name;
 			this.address = address;
@@ -147,8 +153,41 @@ public class Controller implements Initializable {
     
     public void retriveDataFromDBForTableByTableName(String tableName) throws SQLException {
     	Statement statement = main.Main.getConnection().createStatement();
-    	resultsetForTable = statement.executeQuery("SELECT * FROM javaclassproject2021." + tableName);
-    	resultsetForTable.next();
+    	resultsetForWarehouseTable = statement.executeQuery("SELECT * FROM javaclassproject2021." + tableName);
+    	resultsetForWarehouseTable.next();
+    }
+    
+    public void setProductTableColumn() {
+    	TableColumn_pId.setCellValueFactory(new PropertyValueFactory<>("productId"));
+    	TableColumn_pName.setCellValueFactory(new PropertyValueFactory<>("name"));
+    	TableColumn_pUnit.setCellValueFactory(new PropertyValueFactory<>("unit"));
+    	TableColumn_pInventory.setCellValueFactory(new PropertyValueFactory<>("inventory"));
+    }
+    
+    public static class ProductDataForTable {
+    	private String productId;
+    	private String name;
+    	private String unit;
+    	private String inventory;
+    	
+    	ProductDataForTable(String productId, String name, String unit, String inventory)  {
+    		this.productId = productId;
+    		this.name = name;
+    		this.unit = unit;
+    		this.inventory = inventory;
+    	}
+
+		public String getProductId() { return productId; }
+		public void setProductId(String productId) { this.productId = productId; }
+
+		public String getName() { return name; }
+		public void setName(String name) { this.name = name; }
+
+		public String getUnit() { return unit; }
+		public void setUnit(String unit) { this.unit = unit; }
+
+		public String getInventory() { return inventory; }
+		public void setInventory(String inventory) { this.inventory = inventory; }
     }
     
     public void addListenerToTextField_search() {
@@ -169,15 +208,15 @@ public class Controller implements Initializable {
     	TableView_warehouseTable.setItems(getComparedDataWtihTargetValue(targetValue));
     }
     
-    public ObservableList<warehouseDataForTable> getComparedDataWtihTargetValue(String targetValue) {
+    public ObservableList<WarehouseDataForTable> getComparedDataWtihTargetValue(String targetValue) {
     	retriveDataFromDBForTableWithSQLExceptionByTableName("warehouse");
-    	ObservableList<warehouseDataForTable> warehouses = FXCollections.observableArrayList();
+    	ObservableList<WarehouseDataForTable> warehouses = FXCollections.observableArrayList();
     	try {
 			do {
-				if (resultsetForTable.getString(1).contains(targetValue) || resultsetForTable.getString(2).contains(targetValue) || resultsetForTable.getString(3).contains(targetValue) || resultsetForTable.getString(4).contains(targetValue) || resultsetForTable.getString(5).contains(targetValue)) {
-					warehouses.add(new warehouseDataForTable(resultsetForTable.getString(1), resultsetForTable.getString(2), resultsetForTable.getString(3), resultsetForTable.getString(4), resultsetForTable.getString(5)));
+				if (resultsetForWarehouseTable.getString(1).contains(targetValue) || resultsetForWarehouseTable.getString(2).contains(targetValue) || resultsetForWarehouseTable.getString(3).contains(targetValue) || resultsetForWarehouseTable.getString(4).contains(targetValue) || resultsetForWarehouseTable.getString(5).contains(targetValue)) {
+					warehouses.add(new WarehouseDataForTable(resultsetForWarehouseTable.getString(1), resultsetForWarehouseTable.getString(2), resultsetForWarehouseTable.getString(3), resultsetForWarehouseTable.getString(4), resultsetForWarehouseTable.getString(5)));
 				}
-			} while(resultsetForTable.next());
+			} while(resultsetForWarehouseTable.next());
 		} catch (SQLException e) {
 			return FXCollections.observableArrayList();
 		}
@@ -186,33 +225,65 @@ public class Controller implements Initializable {
     
     @FXML
     public void warehouseTableOnClicked() {
-    	
     	if (isSaved == true) {
     		retriveDataFromDBForTableWithSQLExceptionByTableName("warehouse");
-    		ShowSelectedDataToTableWithSQLException();
+    		setDeleteAndEditButtonEnableWithSQLException();
     	}
+    	setProductTableItems();
     }
     
-    public void ShowSelectedDataToTableWithSQLException() {
+    public void setDeleteAndEditButtonEnableWithSQLException() {
     	try {
 			do {
-				if (getTableSelectedIdWithNullPointerException().equals(resultsetForTable.getString(1))) {
+				if (getTableSelectedWarehouseIdWithNullPointerException().equals(resultsetForWarehouseTable.getString(1))) {
 					Button_deleteButton.setDisable(false);
 					Button_editButton.setDisable(false);
 					break;
 				}
-			} while(resultsetForTable.next());
+			} while(resultsetForWarehouseTable.next());
 		} catch (SQLException e) {
 			//Do Nothing
 		}
     }
     
-    public String getTableSelectedIdWithNullPointerException() {
+    public String getTableSelectedWarehouseIdWithNullPointerException() {
     	try {
     		return TableView_warehouseTable.getSelectionModel().getSelectedItem().getWarehouseId();
 		} catch (NullPointerException e) {
 			return "0";
 		}
+    }
+    
+    public void setProductTableItems() {
+    	TableView_productTable.setItems(getProductData());
+    }
+    
+    public ObservableList<ProductDataForTable> getProductData() {
+    	retriveProductDataFromDBForTableWithSQLExceptionByTableName("product");
+    	ObservableList<ProductDataForTable> products = FXCollections.observableArrayList();
+    	try {
+			do {
+				products.add(new ProductDataForTable(resultsetForProductTable.getString(1), resultsetForProductTable.getString(2), resultsetForProductTable.getString(3), String.valueOf(resultsetForProductTable.getInt(4))));
+			} while(resultsetForProductTable.next());
+		} catch (SQLException e) {
+			return FXCollections.observableArrayList();
+		}
+		return products;
+    }
+    
+    public void retriveProductDataFromDBForTableWithSQLExceptionByTableName(String tableName) {
+    	try {
+    		retriveProductDataFromDBForTableByTableName(tableName);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    public void retriveProductDataFromDBForTableByTableName(String tableName) throws SQLException {
+    	Statement statement = main.Main.getConnection().createStatement();
+    	resultsetForProductTable = statement.executeQuery("SELECT product.ProductID, product.Name, product.Unit, productstoreinwarehouse.Amount FROM javaclassproject2021." + tableName + " INNER JOIN productstoreinwarehouse "
+    			+ "ON WarehouseID = " + "\"" + getTableSelectedWarehouseIdWithNullPointerException() + "\"");
+		resultsetForProductTable.next();
     }
     
     @FXML
@@ -236,7 +307,7 @@ public class Controller implements Initializable {
     }
     
     public void createNewRowInTable() {
-    	TableView_warehouseTable.getItems().add(new warehouseDataForTable("", "", "", "", ""));
+    	TableView_warehouseTable.getItems().add(new WarehouseDataForTable("", "", "", "", ""));
     	TableView_warehouseTable.setItems(TableView_warehouseTable.getItems());
     }
     
@@ -277,7 +348,7 @@ public class Controller implements Initializable {
     @FXML
     void deleteButtonClicked(ActionEvent event) throws SQLException {
     	PreparedStatement delStatement = main.Main.getConnection().prepareStatement("DELETE FROM javaclassproject2021.warehouse WHERE  WarehouseID = ?");
-    	delStatement.setString(1, getTableSelectedIdWithNullPointerException());
+    	delStatement.setString(1, getTableSelectedWarehouseIdWithNullPointerException());
     	delStatement.execute();
     	delStatement.close();
     	
@@ -307,7 +378,7 @@ public class Controller implements Initializable {
     @FXML
     void saveButtonClicked(ActionEvent event) {
     	
-    	for(warehouseDataForTable rowItems : TableView_warehouseTable.getItems()) {
+    	for(WarehouseDataForTable rowItems : TableView_warehouseTable.getItems()) {
     		if (rowItems.getWarehouseId() == "") {
     			showNullIDAlertBoxWithException();
     			return;
@@ -380,7 +451,7 @@ public class Controller implements Initializable {
     	TableColumn_faxNumber.setCellFactory(param -> new UpdataedTableCell());
     }
     
-    private class UpdataedTableCell extends TableCell<warehouseDataForTable, String> {
+    private class UpdataedTableCell extends TableCell<WarehouseDataForTable, String> {
         @Override
         protected void updateItem(String item, boolean empty) {
             super.updateItem(item, empty);
@@ -415,7 +486,8 @@ public class Controller implements Initializable {
     
     @FXML
     void leaveButtonClicked(ActionEvent event) throws SQLException {
-    	resultsetForTable.close();
+    	resultsetForWarehouseTable.close();
+    	resultsetForProductTable.close();
 		main.Main.getWarehouseSettingStage().close();
     }
 }
