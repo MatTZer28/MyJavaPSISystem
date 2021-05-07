@@ -356,12 +356,18 @@ public class Controller implements Initializable {
     
     public void updateDataToDB() throws SQLException {
     	for (int i = 0; i < TableView_warehouseTable.getItems().size(); i++) {
-    		PreparedStatement statement = main.Main.getConnection().prepareStatement("REPLACE INTO javaclassproject2021.warehouse VALUES (?, ?, ?, ?, ?)");
+    		PreparedStatement statement = main.Main.getConnection().prepareStatement("INSERT INTO javaclassproject2021.warehouse VALUES (?, ?, ?, ?, ?) "
+    				+ "ON DUPLICATE KEY UPDATE WarehouseID = ?, Name = ?, Address = ?, PhoneNumber = ?, FaxNumber= ?");
     		statement.setString(1, TableView_warehouseTable.getItems().get(i).getWarehouseId());
     		statement.setString(2, TableView_warehouseTable.getItems().get(i).getName());
     		statement.setString(3, TableView_warehouseTable.getItems().get(i).getAddress());
     		statement.setString(4, TableView_warehouseTable.getItems().get(i).getPhoneNumber());
     		statement.setString(5, TableView_warehouseTable.getItems().get(i).getFaxNumber());
+    		statement.setString(6, TableView_warehouseTable.getItems().get(i).getWarehouseId());
+    		statement.setString(7, TableView_warehouseTable.getItems().get(i).getName());
+    		statement.setString(8, TableView_warehouseTable.getItems().get(i).getAddress());
+    		statement.setString(9, TableView_warehouseTable.getItems().get(i).getPhoneNumber());
+    		statement.setString(10, TableView_warehouseTable.getItems().get(i).getFaxNumber());
     		statement.execute();
     		statement.close();
     	}

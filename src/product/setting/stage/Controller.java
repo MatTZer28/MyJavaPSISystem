@@ -258,10 +258,8 @@ public class Controller implements Initializable {
 			this.warehouseId.setValue(warehouseId);
 			this.warehouseId.setDisable(true);
 			
-			this.warehouseName = retriveWarehouseNameFromDB();
+			this.warehouseName = retriveWarehouseNameFromDB(this.warehouseId.getValue());
 			this.amount = amount;
-			
-			addListenerToChoiceBox();
 			
 			resultsetForChoiceBox.close();
 		}
@@ -293,25 +291,11 @@ public class Controller implements Initializable {
         	resultsetForChoiceBox.next();
         }
         
-        public String retriveWarehouseNameFromDB() throws SQLException {
+        public static String retriveWarehouseNameFromDB(String warehouseId) throws SQLException {
         	Statement statement = main.Main.getConnection().createStatement();
-        	ResultSet name = statement.executeQuery("SELECT Name FROM javaclassproject2021.warehouse WHERE WarehouseID = \"" + this.warehouseId + "\"");
+        	ResultSet name = statement.executeQuery("SELECT Name FROM javaclassproject2021.warehouse WHERE WarehouseID = \"" + warehouseId + "\"");
         	if (name.next()) return name.getString(1);
         	else return "";
-        }
-        
-        public void addListenerToChoiceBox() {
-        	this.warehouseId.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-        		@Override
-        		public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-        			try {
-        				System.out.println("Hi");
-        				warehouseName = retriveWarehouseNameFromDB();
-        			} catch (SQLException e) {
-						e.printStackTrace();
-					}
-        	      }
-        	    });
         }
 
         public ChoiceBox<String> getWarehouseId() { return warehouseId; }
@@ -373,7 +357,7 @@ public class Controller implements Initializable {
 	public void ShowSelectedDataToTableWithSQLException() {
     	try {
 			do {
-				if (getTableSelectedIdWithNullPointerException().equals(resultsetForProductTable.getString(1))) {
+				if (getProductTableSelectedIdWithNullPointerException().equals(resultsetForProductTable.getString(1))) {
 					if (isSaved == true) {
 						Button_deleteButton.setDisable(false);
 						Button_editButton.setDisable(false);
@@ -381,12 +365,13 @@ public class Controller implements Initializable {
 					}
 					if (isSaved == false) {	
 						Button_newSpace.setDisable(false);
+						Button_deleteSpace.setDisable(false);
 						updateWarehouseTableDataToDBWithSQLException();
 						setWarehouseTableItems();
 						setChoiceBoxInWarehouseTableEnable();
 						createTextFieldToWarehouseTableColumn();
 					}
-					oldProductId = getTableSelectedIdWithNullPointerException();
+					oldProductId = getProductTableSelectedIdWithNullPointerException();
 					break;
 				}
 			} while(resultsetForProductTable.next());
@@ -405,16 +390,19 @@ public class Controller implements Initializable {
 	
 	public void updateWarehouseTableDataToDB() throws SQLException {		
 	    for (int i = 0; i < TableView_warehouseTable.getItems().size(); i++) {
-	    	PreparedStatement statement = main.Main.getConnection().prepareStatement("REPLACE INTO javaclassproject2021.productstoreinwarehouse VALUES (?, ?, ?)");
+	    	PreparedStatement statement = main.Main.getConnection().prepareStatement("INSERT INTO javaclassproject2021.productstoreinwarehouse VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE ProductID = ?, WarehouseID = ?, Amount = ?");
 	    	statement.setString(1, oldProductId);
 	    	statement.setString(2, TableView_warehouseTable.getItems().get(i).getWarehouseId().getValue());
 	    	statement.setString(3, TableView_warehouseTable.getItems().get(i).getAmount());
+	    	statement.setString(4, oldProductId);
+	    	statement.setString(5, TableView_warehouseTable.getItems().get(i).getWarehouseId().getValue());
+	    	statement.setString(6, TableView_warehouseTable.getItems().get(i).getAmount());
 	    	statement.execute();
 	    	statement.close();
 	    }
 	}
 	
-	public String getTableSelectedIdWithNullPointerException() {
+	public String getProductTableSelectedIdWithNullPointerException() {
     	try {
     		return TableView_productTable.getSelectionModel().getSelectedItem().getProductId();
 		} catch (NullPointerException e) {
@@ -449,7 +437,7 @@ public class Controller implements Initializable {
 	
 	public void retriveDataFromDBForWarehouseTableByTableName(String tableName) throws SQLException {
 		Statement statement = main.Main.getConnection().createStatement();
-    	resultsetForWarehouseTable = statement.executeQuery("SELECT * FROM javaclassproject2021." + tableName + " WHERE ProductID = \"" + getTableSelectedIdWithNullPointerException() + "\"");
+    	resultsetForWarehouseTable = statement.executeQuery("SELECT * FROM javaclassproject2021." + tableName + " WHERE ProductID = \"" + getProductTableSelectedIdWithNullPointerException() + "\"");
     	resultsetForWarehouseTable.next();
 	}
 	
@@ -551,7 +539,7 @@ public class Controller implements Initializable {
 	public void deleteButtonClicked() throws SQLException {
 		TableView_warehouseTable.setItems(FXCollections.observableArrayList());
 		PreparedStatement delStatement = main.Main.getConnection().prepareStatement("DELETE FROM javaclassproject2021.product WHERE  ProductID = ?");
-    	delStatement.setString(1, getTableSelectedIdWithNullPointerException());
+    	delStatement.setString(1, getProductTableSelectedIdWithNullPointerException());
     	delStatement.execute();
     	delStatement.close();
     	
@@ -639,20 +627,10 @@ public class Controller implements Initializable {
     }
     
     public void updateProductTableDataToDB() throws SQLException {
-    	
-    	retriveDataFromDBForProductTableByTableName("product");
-    	
-    	try {
-    		ifNoNewInsertion();
-    	} catch (SQLException e) {
-    		ifHasNewInsertion();
-		}
-    }
-    
-    public void ifNoNewInsertion() throws SQLException {
     	for (int i = 0; i < TableView_productTable.getItems().size(); i++) {
-			PreparedStatement statement = main.Main.getConnection().prepareStatement("UPDATE javaclassproject2021.product SET ProductID = ?, Name = ?, Specification = ?"
-    				+ ", Type = ?, Unit = ?, Total = ?, Cost = ?, SellPrice = ?, SafeAmount = ?, VendorName = ? WHERE ProductID = \"" + resultsetForProductTable.getString(1) + "\"");
+			PreparedStatement statement = main.Main.getConnection().prepareStatement("INSERT INTO javaclassproject2021.product VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+					+ "ON DUPLICATE KEY UPDATE ProductID = ?, Name = ?, Specification = ?, Type = ?, Unit = ?, Total = ?, Cost = ?"
+					+ ", SellPrice = ?, SafeAmount = ?, VendorName = ?");
         	statement.setString(1, TableView_productTable.getItems().get(i).getProductId());
         	statement.setString(2, TableView_productTable.getItems().get(i).getName());
         	statement.setString(3, TableView_productTable.getItems().get(i).getSpecification());
@@ -663,26 +641,20 @@ public class Controller implements Initializable {
         	statement.setInt(8, Integer.parseInt(TableView_productTable.getItems().get(i).getSellPrice()));
         	statement.setInt(9, Integer.parseInt(TableView_productTable.getItems().get(i).getSafeAmount()));
         	statement.setString(10, TableView_productTable.getItems().get(i).getVendor().getValue());
+        	statement.setString(11, TableView_productTable.getItems().get(i).getProductId());
+        	statement.setString(12, TableView_productTable.getItems().get(i).getName());
+        	statement.setString(13, TableView_productTable.getItems().get(i).getSpecification());
+        	statement.setString(14, TableView_productTable.getItems().get(i).getType());
+        	statement.setString(15, TableView_productTable.getItems().get(i).getUnit());
+        	statement.setInt(16, Integer.parseInt(TableView_productTable.getItems().get(i).getTotal()));
+        	statement.setInt(17, Integer.parseInt(TableView_productTable.getItems().get(i).getCost()));
+        	statement.setInt(18, Integer.parseInt(TableView_productTable.getItems().get(i).getSellPrice()));
+        	statement.setInt(19, Integer.parseInt(TableView_productTable.getItems().get(i).getSafeAmount()));
+        	statement.setString(20, TableView_productTable.getItems().get(i).getVendor().getValue());
         	statement.execute();
         	statement.close();
         	resultsetForProductTable.next();
 		}
-    }
-    
-    public void ifHasNewInsertion() throws SQLException {
-    	PreparedStatement statement = main.Main.getConnection().prepareStatement("INSERT INTO javaclassproject2021.product VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    	statement.setString(1, TableView_productTable.getItems().get(TableView_productTable.getItems().size() - 1).getProductId());
-    	statement.setString(2, TableView_productTable.getItems().get(TableView_productTable.getItems().size() - 1).getName());
-    	statement.setString(3, TableView_productTable.getItems().get(TableView_productTable.getItems().size() - 1).getSpecification());
-    	statement.setString(4, TableView_productTable.getItems().get(TableView_productTable.getItems().size() - 1).getType());
-    	statement.setString(5, TableView_productTable.getItems().get(TableView_productTable.getItems().size() - 1).getUnit());
-    	statement.setInt(6, Integer.parseInt(TableView_productTable.getItems().get(TableView_productTable.getItems().size() - 1).getTotal()));
-    	statement.setInt(7, Integer.parseInt(TableView_productTable.getItems().get(TableView_productTable.getItems().size() - 1).getCost()));
-    	statement.setInt(8, Integer.parseInt(TableView_productTable.getItems().get(TableView_productTable.getItems().size() - 1).getSellPrice()));
-    	statement.setInt(9, Integer.parseInt(TableView_productTable.getItems().get(TableView_productTable.getItems().size() - 1).getSafeAmount()));
-    	statement.setString(10, TableView_productTable.getItems().get(TableView_productTable.getItems().size() - 1).getVendor().getValue());
-    	statement.execute();
-    	statement.close();
     }
     
     public void removeTextFieldAndUpdateProductTableCell() {
@@ -763,9 +735,9 @@ public class Controller implements Initializable {
 	public void newSpaceButtonClicked() {
 		
 		createNewRowInWarehouseTableWithSQLException();
+		setChoiceBoxInWarehouseTableEnable();
     	createTextFieldToWarehouseTableColumn();
     	setOnEditOnNewWarehouseRow();
-    	setChoiceBoxInWarehouseTableEnable();
 	}
 	
 	public void createNewRowInWarehouseTableWithSQLException() {
@@ -778,8 +750,35 @@ public class Controller implements Initializable {
 	
 	public void createNewRowInWarehouseTable() throws SQLException {
     	TableView_warehouseTable.getItems().add(new ProdouctStoreInWarehouseDataForTable("", "0"));
+    	TableView_warehouseTable.getItems().get(TableView_warehouseTable.getItems().size() - 1).getWarehouseId().getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+    		@Override
+    		public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+    			//try {
+    				System.out.println(newValue);
+    				//TableView_warehouseTable.getItems().get(TableView_warehouseTable.getSelectionModel().getSelectedIndex()).setWarehouseName(ProdouctStoreInWarehouseDataForTable.retriveWarehouseNameFromDB(TableView_warehouseTable.getItems().get(TableView_warehouseTable.getSelectionModel().getSelectedIndex()).getWarehouseId().getValue()));
+    				//updateWarehouseId();
+    				//setWarehouseTableItems();
+    		    	//setChoiceBoxInWarehouseTableEnable();
+    		    	//createTextFieldToWarehouseTableColumn();
+    			//} catch (SQLException e) {
+					//e.printStackTrace();
+				//}
+    	      }
+    	    });
     	TableView_warehouseTable.setItems(TableView_warehouseTable.getItems());
     }
+	
+	public void updateWarehouseId() throws SQLException {
+		PreparedStatement statement = main.Main.getConnection().prepareStatement("INSERT INTO javaclassproject2021.productstoreinwarehouse VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE ProductID = ?, WarehouseID = ?, Amount = ?");
+		statement.setString(1, oldProductId);
+    	statement.setString(2, TableView_warehouseTable.getItems().get(TableView_warehouseTable.getSelectionModel().getSelectedIndex()).getWarehouseId().getValue());
+    	statement.setString(3, TableView_warehouseTable.getItems().get(TableView_warehouseTable.getSelectionModel().getSelectedIndex()).getAmount());
+    	statement.setString(4, oldProductId);
+    	statement.setString(5, TableView_warehouseTable.getItems().get(TableView_warehouseTable.getSelectionModel().getSelectedIndex()).getWarehouseId().getValue());
+    	statement.setString(6, TableView_warehouseTable.getItems().get(TableView_warehouseTable.getSelectionModel().getSelectedIndex()).getAmount());
+    	statement.execute();
+    	statement.close();
+	}
     
     public void createTextFieldToWarehouseTableColumn() {
     	TableColumn_wAmount.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -801,8 +800,23 @@ public class Controller implements Initializable {
     }
 	
 	@FXML
-	public void deleteSpaceButtonClicked() {
-		
+	public void deleteSpaceButtonClicked() throws SQLException {
+		PreparedStatement delStatement = main.Main.getConnection().prepareStatement("DELETE FROM javaclassproject2021.productstoreinwarehouse WHERE  WarehouseID = ?");
+    	delStatement.setString(1, getWarehouseTableSelectedIdWithNullPointerException());
+    	delStatement.execute();
+    	delStatement.close();
+    	
+    	setWarehouseTableItems();
+    	setChoiceBoxInWarehouseTableEnable();
+    	createTextFieldToWarehouseTableColumn();
 	}
+	
+	public String getWarehouseTableSelectedIdWithNullPointerException() {
+    	try {
+    		return TableView_warehouseTable.getSelectionModel().getSelectedItem().getWarehouseId().getValue();
+		} catch (NullPointerException e) {
+			return "0";
+		}
+    }
 	
 }
