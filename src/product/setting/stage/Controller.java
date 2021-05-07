@@ -366,6 +366,7 @@ public class Controller implements Initializable {
 					if (isSaved == false) {	
 						Button_newSpace.setDisable(false);
 						Button_deleteSpace.setDisable(false);
+						TableView_warehouseTable.setDisable(false);
 						updateWarehouseTableDataToDBWithSQLException();
 						setWarehouseTableItems();
 						setChoiceBoxInWarehouseTableEnable();
@@ -390,6 +391,7 @@ public class Controller implements Initializable {
 	
 	public void updateWarehouseTableDataToDB() throws SQLException {		
 	    for (int i = 0; i < TableView_warehouseTable.getItems().size(); i++) {
+	    	if (TableView_warehouseTable.getItems().get(i).getWarehouseId().getValue() == "") continue;
 	    	PreparedStatement statement = main.Main.getConnection().prepareStatement("INSERT INTO javaclassproject2021.productstoreinwarehouse VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE ProductID = ?, WarehouseID = ?, Amount = ?");
 	    	statement.setString(1, oldProductId);
 	    	statement.setString(2, TableView_warehouseTable.getItems().get(i).getWarehouseId().getValue());
@@ -419,7 +421,19 @@ public class Controller implements Initializable {
     	ObservableList<ProdouctStoreInWarehouseDataForTable> warehouses = FXCollections.observableArrayList();
     	try {
 			do {
-				warehouses.add(new ProdouctStoreInWarehouseDataForTable(resultsetForWarehouseTable.getString(2), resultsetForWarehouseTable.getString(3)));
+				ProdouctStoreInWarehouseDataForTable pData = new ProdouctStoreInWarehouseDataForTable(resultsetForWarehouseTable.getString(2), resultsetForWarehouseTable.getString(3));
+				pData.getWarehouseId().getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+		    		@Override
+		    		public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+		    				String choiceBoxValue = pData.getWarehouseId().getItems().get((int )newValue);
+		    				setWarehouseNameWithSQLException(pData, choiceBoxValue);
+		    				updateWarehouseIdWithSQLException(pData, choiceBoxValue);
+		    				setWarehouseTableItems();
+		    		    	setChoiceBoxInWarehouseTableEnable();
+		    		    	createTextFieldToWarehouseTableColumn();
+		    	      }
+		    	    });
+				warehouses.add(pData);
 			} while(resultsetForWarehouseTable.next());
 		} catch (SQLException e) {
 			return FXCollections.observableArrayList();
@@ -440,13 +454,11 @@ public class Controller implements Initializable {
     	resultsetForWarehouseTable = statement.executeQuery("SELECT * FROM javaclassproject2021." + tableName + " WHERE ProductID = \"" + getProductTableSelectedIdWithNullPointerException() + "\"");
     	resultsetForWarehouseTable.next();
 	}
-	
+
 	@FXML
 	public void insertButtonClicked() {
 		TableView_productTable.setEditable(true);
 		
-		TableView_warehouseTable.setDisable(true);
-    	
     	isSaved = false;
     	isOnInsertionState = true;
     	
@@ -581,13 +593,14 @@ public class Controller implements Initializable {
     	TableView_productTable.setEditable(false);
     	TableView_warehouseTable.setEditable(false);
     	
-    	TableView_warehouseTable.setDisable(false);
+    	TableView_warehouseTable.setDisable(true);
     	updateWarehouseTableDataToDBWithSQLException();
     	TableView_warehouseTable.setItems(FXCollections.observableArrayList());
     	
     	isSaved = true;
     	isOnInsertionState = false;
-
+    	
+    	setProductTotalAmountWithSQLException();
     	updateProductTableDataToDBWithSQLException();
     	removeTextFieldAndUpdateProductTableCell();
     	removeTextFieldAndUpdateWarehouseTableCell();
@@ -616,6 +629,30 @@ public class Controller implements Initializable {
     public void showNullIDAlertBox() throws Exception {
     	main.Main.setNullIdAlertBoxStage(new Stage());
     	new NullIDAlertBox().launchScene(main.Main.getNullIdAlertBoxStage());
+    }
+    
+    public void setProductTotalAmountWithSQLException() {
+    	try {
+    		setProductTotalAmount();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+    
+    public void setProductTotalAmount() throws SQLException {
+    	for (int i = 0; i < TableView_productTable.getItems().size(); i++) {
+    		
+    		int totalAmount = 0;
+    		
+    		PreparedStatement statement = main.Main.getConnection().prepareStatement("SELECT Amount FROM javaclassproject2021.productstoreinwarehouse WHERE ProductID = ?");
+    		statement.setString(1, TableView_productTable.getItems().get(i).getProductId());
+    		resultsetForProductTable = statement.executeQuery();
+    		while (resultsetForProductTable.next()) {
+    			totalAmount += resultsetForProductTable.getInt(1);
+    		}
+    		
+    		TableView_productTable.getItems().get(i).setTotal(String.valueOf(totalAmount));
+    	}
     }
     
     public void updateProductTableDataToDBWithSQLException() {
@@ -701,7 +738,7 @@ public class Controller implements Initializable {
 		TableView_productTable.setEditable(false);
 		TableView_warehouseTable.setEditable(false);
 		
-		TableView_warehouseTable.setDisable(false);
+		TableView_warehouseTable.setDisable(true);
 		TableView_warehouseTable.setItems(FXCollections.observableArrayList());
     	
     	isSaved = true;
@@ -733,7 +770,7 @@ public class Controller implements Initializable {
 	
 	@FXML
 	public void newSpaceButtonClicked() {
-		
+		updateWarehouseTableDataToDBWithSQLException();
 		createNewRowInWarehouseTableWithSQLException();
 		setChoiceBoxInWarehouseTableEnable();
     	createTextFieldToWarehouseTableColumn();
@@ -749,36 +786,59 @@ public class Controller implements Initializable {
 	}
 	
 	public void createNewRowInWarehouseTable() throws SQLException {
-    	TableView_warehouseTable.getItems().add(new ProdouctStoreInWarehouseDataForTable("", "0"));
+		ProdouctStoreInWarehouseDataForTable pData = new ProdouctStoreInWarehouseDataForTable("", "0");
+    	TableView_warehouseTable.getItems().add(pData);
     	TableView_warehouseTable.getItems().get(TableView_warehouseTable.getItems().size() - 1).getWarehouseId().getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
     		@Override
     		public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-    			//try {
-    				System.out.println(newValue);
-    				//TableView_warehouseTable.getItems().get(TableView_warehouseTable.getSelectionModel().getSelectedIndex()).setWarehouseName(ProdouctStoreInWarehouseDataForTable.retriveWarehouseNameFromDB(TableView_warehouseTable.getItems().get(TableView_warehouseTable.getSelectionModel().getSelectedIndex()).getWarehouseId().getValue()));
-    				//updateWarehouseId();
-    				//setWarehouseTableItems();
-    		    	//setChoiceBoxInWarehouseTableEnable();
-    		    	//createTextFieldToWarehouseTableColumn();
-    			//} catch (SQLException e) {
-					//e.printStackTrace();
-				//}
+    				String choiceBoxValue = pData.getWarehouseId().getItems().get((int )newValue);
+    				setWarehouseNameWithSQLException(pData, choiceBoxValue);
+    				updateWarehouseIdWithSQLException(pData, choiceBoxValue);
+    				setWarehouseTableItems();
+    		    	setChoiceBoxInWarehouseTableEnable();
+    		    	createTextFieldToWarehouseTableColumn();
     	      }
     	    });
     	TableView_warehouseTable.setItems(TableView_warehouseTable.getItems());
     }
 	
-	public void updateWarehouseId() throws SQLException {
+	public void setWarehouseNameWithSQLException(ProdouctStoreInWarehouseDataForTable pData, String warehouseId) {
+		try {
+			setWarehouseName(pData, warehouseId);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void setWarehouseName(ProdouctStoreInWarehouseDataForTable pData, String warehouseId) throws SQLException {
+		pData.setWarehouseName(ProdouctStoreInWarehouseDataForTable.retriveWarehouseNameFromDB(warehouseId));
+	}
+	
+	public void updateWarehouseIdWithSQLException(ProdouctStoreInWarehouseDataForTable pData, String warehouseId) {
+		try {
+			updateWarehouseId(pData, warehouseId);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void updateWarehouseId(ProdouctStoreInWarehouseDataForTable pData, String warehouseId) throws SQLException {
 		PreparedStatement statement = main.Main.getConnection().prepareStatement("INSERT INTO javaclassproject2021.productstoreinwarehouse VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE ProductID = ?, WarehouseID = ?, Amount = ?");
 		statement.setString(1, oldProductId);
-    	statement.setString(2, TableView_warehouseTable.getItems().get(TableView_warehouseTable.getSelectionModel().getSelectedIndex()).getWarehouseId().getValue());
-    	statement.setString(3, TableView_warehouseTable.getItems().get(TableView_warehouseTable.getSelectionModel().getSelectedIndex()).getAmount());
+    	statement.setString(2, warehouseId);
+    	statement.setString(3, pData.getAmount());
     	statement.setString(4, oldProductId);
-    	statement.setString(5, TableView_warehouseTable.getItems().get(TableView_warehouseTable.getSelectionModel().getSelectedIndex()).getWarehouseId().getValue());
-    	statement.setString(6, TableView_warehouseTable.getItems().get(TableView_warehouseTable.getSelectionModel().getSelectedIndex()).getAmount());
+    	statement.setString(5, warehouseId);
+    	statement.setString(6, pData.getAmount());
     	statement.execute();
     	statement.close();
 	}
+	
+	public void setChoiceBoxInWarehouseTableEnable() {
+    	for (int i = 0; i < TableView_warehouseTable.getItems().size(); i++) {
+    		TableView_warehouseTable.getItems().get(i).getWarehouseId().setDisable(false);
+    	}
+    }
     
     public void createTextFieldToWarehouseTableColumn() {
     	TableColumn_wAmount.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -792,12 +852,6 @@ public class Controller implements Initializable {
     	int selectedRow = TableView_warehouseTable.getSelectionModel().getSelectedIndex();
     	TableView_warehouseTable.edit(selectedRow, TableColumn_wName);
 	}
-    
-    public void setChoiceBoxInWarehouseTableEnable() {
-    	for (int i = 0; i < TableView_warehouseTable.getItems().size(); i++) {
-    		TableView_warehouseTable.getItems().get(i).getWarehouseId().setDisable(false);
-    	}
-    }
 	
 	@FXML
 	public void deleteSpaceButtonClicked() throws SQLException {
@@ -818,5 +872,4 @@ public class Controller implements Initializable {
 			return "0";
 		}
     }
-	
 }

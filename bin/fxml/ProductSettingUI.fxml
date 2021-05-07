@@ -140,7 +140,7 @@
             </VBox>
             <VBox layoutX="20.0" layoutY="20.0" prefHeight="678.0" prefWidth="309.0" HBox.hgrow="SOMETIMES">
                <children>
-                  <TableView fx:id="TableView_warehouseTable" VBox.vgrow="ALWAYS">
+                  <TableView fx:id="TableView_warehouseTable" disable="true" VBox.vgrow="ALWAYS">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
