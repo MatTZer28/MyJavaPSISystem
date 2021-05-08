@@ -1,14 +1,11 @@
 package warehouse.setting.stage;
 
-import java.lang.invoke.StringConcatFactory;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
-
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
 
 import alertbox.nullid.stage.NullIDAlertBox;
 import javafx.beans.value.ChangeListener;
