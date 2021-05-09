@@ -279,7 +279,7 @@ public class Controller implements Initializable {
     public void retriveProductDataFromDBForTableByTableName(String tableName) throws SQLException {
     	Statement statement = main.Main.getConnection().createStatement();
     	resultsetForProductTable = statement.executeQuery("SELECT product.ProductID, product.Name, product.Unit, productstoreinwarehouse.Amount FROM javaclassproject2021." + tableName + " INNER JOIN productstoreinwarehouse "
-    			+ "ON WarehouseID = " + "\"" + getTableSelectedWarehouseIdWithNullPointerException() + "\"");
+    			+ "ON WarehouseID = " + "\"" + getTableSelectedWarehouseIdWithNullPointerException() + "\"" +  " WHERE javaclassproject2021.product.ProductID = javaclassproject2021.productstoreinwarehouse.ProductID");
 		resultsetForProductTable.next();
     }
     
@@ -484,7 +484,7 @@ public class Controller implements Initializable {
     @FXML
     void leaveButtonClicked(ActionEvent event) throws SQLException {
     	resultsetForWarehouseTable.close();
-    	resultsetForProductTable.close();
+    	if (resultsetForProductTable != null) resultsetForProductTable.close();
 		main.Main.getWarehouseSettingStage().close();
     }
 }
