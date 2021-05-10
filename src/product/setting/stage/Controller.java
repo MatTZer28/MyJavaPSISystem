@@ -429,19 +429,19 @@ public class Controller implements Initializable {
     	ObservableList<ProdouctStoreInWarehouseDataForTable> warehouses = FXCollections.observableArrayList();
     	try {
 			do {
-				ProdouctStoreInWarehouseDataForTable pData = new ProdouctStoreInWarehouseDataForTable(resultsetForWarehouseTable.getString(2), resultsetForWarehouseTable.getString(3));
-				pData.getWarehouseId().getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+				ProdouctStoreInWarehouseDataForTable productData = new ProdouctStoreInWarehouseDataForTable(resultsetForWarehouseTable.getString(2), resultsetForWarehouseTable.getString(3));
+				productData.getWarehouseId().getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 		    		@Override
 		    		public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-		    				String choiceBoxValue = pData.getWarehouseId().getItems().get((int )newValue);
-		    				setWarehouseNameWithSQLException(pData, choiceBoxValue);
-		    				updateWarehouseIdWithSQLException(pData, choiceBoxValue);
+		    				String choiceBoxValue = productData.getWarehouseId().getItems().get((int )newValue);
+		    				setWarehouseNameWithSQLException(productData, choiceBoxValue);
+		    				updateWarehouseIdWithSQLException(productData, choiceBoxValue);
 		    				setWarehouseTableItems();
 		    		    	setChoiceBoxInWarehouseTableEnable();
 		    		    	createTextFieldToWarehouseTableColumn();
 		    	      }
 		    	    });
-				warehouses.add(pData);
+				warehouses.add(productData);
 			} while(resultsetForWarehouseTable.next());
 		} catch (SQLException e) {
 			return FXCollections.observableArrayList();
@@ -794,50 +794,50 @@ public class Controller implements Initializable {
 	}
 	
 	public void createNewRowInWarehouseTable() throws SQLException {
-		ProdouctStoreInWarehouseDataForTable pData = new ProdouctStoreInWarehouseDataForTable("", "0");
-    	TableView_warehouseTable.getItems().add(pData);
+		ProdouctStoreInWarehouseDataForTable productData = new ProdouctStoreInWarehouseDataForTable("", "0");
+    	TableView_warehouseTable.getItems().add(productData);
     	TableView_warehouseTable.getItems().get(TableView_warehouseTable.getItems().size() - 1).getWarehouseId().getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
     		@Override
     		public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-    				String choiceBoxValue = pData.getWarehouseId().getItems().get((int )newValue);
-    				setWarehouseNameWithSQLException(pData, choiceBoxValue);
-    				updateWarehouseIdWithSQLException(pData, choiceBoxValue);
+    				String choiceBoxValue = productData.getWarehouseId().getItems().get((int )newValue);
+    				setWarehouseNameWithSQLException(productData, choiceBoxValue);
+    				updateWarehouseIdWithSQLException(productData, choiceBoxValue);
     				setWarehouseTableItems();
     		    	setChoiceBoxInWarehouseTableEnable();
     		    	createTextFieldToWarehouseTableColumn();
-    	      }
-    	    });
+    	    }
+    	});
     	TableView_warehouseTable.setItems(TableView_warehouseTable.getItems());
     }
 	
-	public void setWarehouseNameWithSQLException(ProdouctStoreInWarehouseDataForTable pData, String warehouseId) {
+	public void setWarehouseNameWithSQLException(ProdouctStoreInWarehouseDataForTable productData, String warehouseId) {
 		try {
-			setWarehouseName(pData, warehouseId);
+			setWarehouseName(productData, warehouseId);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void setWarehouseName(ProdouctStoreInWarehouseDataForTable pData, String warehouseId) throws SQLException {
-		pData.setWarehouseName(ProdouctStoreInWarehouseDataForTable.retriveWarehouseNameFromDB(warehouseId));
+	public void setWarehouseName(ProdouctStoreInWarehouseDataForTable productData, String warehouseId) throws SQLException {
+		productData.setWarehouseName(ProdouctStoreInWarehouseDataForTable.retriveWarehouseNameFromDB(warehouseId));
 	}
 	
-	public void updateWarehouseIdWithSQLException(ProdouctStoreInWarehouseDataForTable pData, String warehouseId) {
+	public void updateWarehouseIdWithSQLException(ProdouctStoreInWarehouseDataForTable productData, String warehouseId) {
 		try {
-			updateWarehouseId(pData, warehouseId);
+			updateWarehouseId(productData, warehouseId);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void updateWarehouseId(ProdouctStoreInWarehouseDataForTable pData, String warehouseId) throws SQLException {
+	public void updateWarehouseId(ProdouctStoreInWarehouseDataForTable productData, String warehouseId) throws SQLException {
 		PreparedStatement statement = main.Main.getConnection().prepareStatement("INSERT INTO javaclassproject2021.productstoreinwarehouse VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE ProductID = ?, WarehouseID = ?, Amount = ?");
 		statement.setString(1, oldProductId);
     	statement.setString(2, warehouseId);
-    	statement.setString(3, pData.getAmount());
+    	statement.setString(3, productData.getAmount());
     	statement.setString(4, oldProductId);
     	statement.setString(5, warehouseId);
-    	statement.setString(6, pData.getAmount());
+    	statement.setString(6, productData.getAmount());
     	statement.execute();
     	statement.close();
 	}

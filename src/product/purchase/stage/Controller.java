@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,12 +18,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseEvent;
-import product.setting.stage.Controller.ProductDataForTable;
 
 public class Controller implements Initializable{
+	
+	@FXML
+	private TextField TextField_search;
 	
 	@FXML
 	private TableView<PurchaseDataForTable> TableView_purchaseTable;
@@ -30,11 +36,11 @@ public class Controller implements Initializable{
 	@FXML	
 	private TableView<?> TableView_warehouseTable;
 	@FXML
-	private TableColumn<?, String> TableColumn_purchaseId;
+	private TableColumn<PurchaseDataForTable, String> TableColumn_purchaseId;
 	@FXML
-	private TableColumn<?, ChoiceBox<String>> TableColumn_vendorId;
+	private TableColumn<PurchaseDataForTable, ChoiceBox<String>> TableColumn_vendorId;
 	@FXML
-	private TableColumn<?, String> TableColumn_vendorName;
+	private TableColumn<PurchaseDataForTable, String> TableColumn_vendorName;
 	@FXML
 	private TableColumn<?, String> TableColumn_productId;
 	@FXML
@@ -47,6 +53,8 @@ public class Controller implements Initializable{
 	private TableColumn<?, String> TableColumn_unit;
 	
 	private ObservableList<PurchaseDataForTable> purchaseTableItems;
+	
+	private ObservableList<?> productTableItems;
 	
 	@FXML
     private Button Button_insertButton;
@@ -63,6 +71,8 @@ public class Controller implements Initializable{
     
     private ResultSet resultsetForPurchaseTable;
     
+    private boolean isSaved = true;
+    
     @FXML
     private ToolBar ToolBar_toolBar;
     
@@ -73,7 +83,8 @@ public class Controller implements Initializable{
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		setStageDragable();
-		initDataToPurchaseTable();
+		initTable();
+		setProductTableColumn();
 	}
 	
 	public void setStageDragable() {
@@ -94,9 +105,10 @@ public class Controller implements Initializable{
         });
 	}
 	
-	public void initDataToPurchaseTable() {
+	public void initTable() {
 		setPurchaseTableColumn();
 		setPurchaseTableItems();
+		setProductTableColumn();
 	}
 	
 	public void setPurchaseTableColumn() {
@@ -115,7 +127,8 @@ public class Controller implements Initializable{
     	ObservableList<PurchaseDataForTable> purchases = FXCollections.observableArrayList();
     	try {
 			do {
-				
+				PurchaseDataForTable purcheasData = new PurchaseDataForTable(resultsetForPurchaseTable.getString(1), resultsetForPurchaseTable.getString(2));
+				purchases.add(purcheasData);
 			} while(resultsetForPurchaseTable.next());
 		} catch (SQLException e) {
 			return FXCollections.observableArrayList();
@@ -123,7 +136,7 @@ public class Controller implements Initializable{
 		return purchases;
 	}
 	
-	public static class PurchaseDataForTable {
+	public class PurchaseDataForTable {
 		private String purchaseId;
 		private ChoiceBox<String> vendorId;
 		private String vendorName;
@@ -137,6 +150,9 @@ public class Controller implements Initializable{
 			this.vendorId.setItems(getVendorData());
 			this.vendorId.setValue(vendorId);
 			this.vendorId.setDisable(true);
+			addChangeListenerToVendorId();
+			
+			this.vendorName = retriveVendorNameFromDB(this.vendorId.getValue());
 			
 			resultsetForChoiceBox.close();
 		}
@@ -167,10 +183,55 @@ public class Controller implements Initializable{
         	resultsetForChoiceBox = statement.executeQuery("SELECT VendorID FROM javaclassproject2021.vendorinformation");
         	resultsetForChoiceBox.next();
         }
+        
+        public void addChangeListenerToVendorId() {
+        	this.vendorId.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+        		@Override
+        		public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+        			String choiceBoxValue = getVendorId().getItems().get((int )newValue);
+        			try {
+						setVendorName(retriveVendorNameFromDB(choiceBoxValue));
+						TableView_purchaseTable.getColumns().get(2).setVisible(false);
+						TableView_purchaseTable.getColumns().get(2).setVisible(true);
+						TableView_productTable.setDisable(false);
+						//setProduct
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+        	    }
+			});
+        }
+        
+        public String retriveVendorNameFromDB(String vendorId) throws SQLException {
+        	Statement statement = main.Main.getConnection().createStatement();
+        	ResultSet name = statement.executeQuery("SELECT Name FROM javaclassproject2021.vendorinformation WHERE VendorID = \"" + vendorId + "\"");
+        	if (name.next()) return name.getString(1);
+        	else return "";
+        }
 
 		public String getPurchaseId() { return purchaseId; }
 		public void setPurchaseId(String purchaseId) { this.purchaseId = purchaseId; }
+
+		public ChoiceBox<String> getVendorId() { return vendorId; }
+		public void setVendorId(ChoiceBox<String> vendorId) { this.vendorId = vendorId; }
+
+		public String getVendorName() { return vendorName; }
+		public void setVendorName(String vendorName) { this.vendorName = vendorName; }
 		
+	}
+	
+	public ObservableList<PurchaseDataForTable> getProductData() {
+		retriveDataFromDBForPurchaseTableWithSQLException();
+    	ObservableList<PurchaseDataForTable> purchases = FXCollections.observableArrayList();
+    	try {
+			do {
+				PurchaseDataForTable purcheasData = new PurchaseDataForTable(resultsetForPurchaseTable.getString(1), resultsetForPurchaseTable.getString(2));
+				purchases.add(purcheasData);
+			} while(resultsetForPurchaseTable.next());
+		} catch (SQLException e) {
+			return FXCollections.observableArrayList();
+		}
+		return purchases;
 	}
 	
 	public void retriveDataFromDBForPurchaseTableWithSQLException() {
@@ -187,15 +248,66 @@ public class Controller implements Initializable{
     	resultsetForPurchaseTable.next();
 	}
 	
-	
-	@FXML
-	public void insertButtonClicked(ActionEvent event) {
-		 
+	public void setProductTableColumn() {
+		TableColumn_productId.setCellValueFactory(new PropertyValueFactory<>("productId"));
 	}
 	
 	@FXML
-	public void deleteButtonClicked(ActionEvent event) throws SQLException {
+	public void insertButtonClicked(ActionEvent event) {
+		 TableView_purchaseTable.setEditable(true);
 		 
+		 isSaved = false;
+		 
+		 createNewRowInPurchaseTableWithSQLExcpetion();
+		 createTextFieldToProductTableColumn();
+		 setOnEditOnNewProductRow();
+		 
+		 Button_saveButton.setDisable(false);
+		 Button_quitButton.setDisable(false);
+		 setChoiceBoxInPurchaseTableEnable();
+		 
+		 Button_insertButton.setDisable(true);
+		 Button_deleteButton.setDisable(true);
+		 Button_editButton.setDisable(true);
+		 Button_leaveButton.setDisable(true);
+		 TextField_search.setDisable(true);
+	}
+	
+	public void createNewRowInPurchaseTableWithSQLExcpetion() {
+		try {
+			createNewRowInPurchaseTable();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void createNewRowInPurchaseTable() throws SQLException {
+		purchaseTableItems.add(new PurchaseDataForTable("", ""));
+		TableView_purchaseTable.setItems(purchaseTableItems);
+	}
+	
+	public void createTextFieldToProductTableColumn() {
+		TableColumn_purchaseId.setCellFactory(TextFieldTableCell.forTableColumn());
+		TableColumn_purchaseId.setOnEditCommit(e -> {
+        		e.getTableView().getItems().get(e.getTablePosition().getRow()).setPurchaseId(e.getNewValue());
+    	});
+	}
+	
+	public void setOnEditOnNewProductRow() {
+		TableView_purchaseTable.getSelectionModel().clearAndSelect(TableView_purchaseTable.getItems().size() - 1);
+    	int selectedRow = TableView_purchaseTable.getSelectionModel().getSelectedIndex();
+    	TableView_purchaseTable.edit(selectedRow, TableColumn_purchaseId);
+	}
+	
+	public void setChoiceBoxInPurchaseTableEnable() {
+    	for (int i = 0; i < TableView_purchaseTable.getItems().size(); i++) {
+    		TableView_purchaseTable.getItems().get(i).getVendorId().setDisable(false);
+    	}
+    }
+	
+	@FXML
+	public void deleteButtonClicked(ActionEvent event) throws SQLException {
+		
 	}
 	 
 	@FXML
