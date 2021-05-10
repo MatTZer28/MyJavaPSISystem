@@ -284,7 +284,7 @@ public class Controller implements Initializable {
     }
     
     @FXML
-    void insertButtonClicked(ActionEvent event) {
+    public void insertButtonClicked(ActionEvent event) {
     	TableView_warehouseTable.setEditable(true);
     	
     	isSaved = false;
@@ -343,7 +343,7 @@ public class Controller implements Initializable {
     
 
     @FXML
-    void deleteButtonClicked(ActionEvent event) throws SQLException {
+    public void deleteButtonClicked(ActionEvent event) throws SQLException {
     	PreparedStatement delStatement = main.Main.getConnection().prepareStatement("DELETE FROM javaclassproject2021.warehouse WHERE  WarehouseID = ?");
     	delStatement.setString(1, getTableSelectedWarehouseIdWithNullPointerException());
     	delStatement.execute();
@@ -353,7 +353,7 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    void editButtonClicked(ActionEvent event) {
+    public void editButtonClicked(ActionEvent event) {
     	
     	TableView_warehouseTable.setEditable(true);
     	
@@ -373,7 +373,7 @@ public class Controller implements Initializable {
     }
     
     @FXML
-    void saveButtonClicked(ActionEvent event) {
+    public void saveButtonClicked(ActionEvent event) {
     	
     	for(WarehouseDataForTable rowItems : TableView_warehouseTable.getItems()) {
     		if (rowItems.getWarehouseId() == "") {
@@ -461,7 +461,7 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    void quitButtonClicked(ActionEvent event) {
+    public void quitButtonClicked(ActionEvent event) {
     	
     	TableView_warehouseTable.setEditable(false);
     	
@@ -482,7 +482,7 @@ public class Controller implements Initializable {
     }
     
     @FXML
-    void leaveButtonClicked(ActionEvent event) throws SQLException {
+    public void leaveButtonClicked(ActionEvent event) throws SQLException {
     	resultsetForWarehouseTable.close();
     	if (resultsetForProductTable != null) resultsetForProductTable.close();
 		main.Main.getWarehouseSettingStage().close();

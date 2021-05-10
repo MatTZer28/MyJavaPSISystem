@@ -36,72 +36,31 @@ public class Main extends Application {
 		
 		createConnectionToMySQLDataBase();
 		
-		
 	}
 	
-	public static Stage getPrimaryStage() {
-		return PrimaryStage;
-	}
+	public static Stage getPrimaryStage() { return PrimaryStage; }
+	public static void setPrimaryStage(Stage primaryStage) { PrimaryStage = primaryStage; }
 
-	public static void setPrimaryStage(Stage primaryStage) {
-		PrimaryStage = primaryStage;
-	}
+	public static Stage getCompanyInfomationStage() { return CompanyInfomationStage; }
+	public static void setCompanyInfomationStage(Stage companyInfomationStage) { CompanyInfomationStage = companyInfomationStage; }
 
-	public static Stage getCompanyInfomationStage() {
-		return CompanyInfomationStage;
-	}
+	public static Stage getVendorInformationStage() { return VendorInformationStage; }
+	public static void setVendorInformationStage(Stage vendorInfomationStage) { VendorInformationStage = vendorInfomationStage; }
 
-	public static void setCompanyInfomationStage(Stage companyInfomationStage) {
-		CompanyInfomationStage = companyInfomationStage;
-	}
+	public static Stage getEmpolyeeInformationStage() { return EmpolyeeInformationStage; }
+	public static void setEmpolyeeInformationStage(Stage empolyeeInformationStage) { EmpolyeeInformationStage = empolyeeInformationStage; }
 
-	public static Stage getVendorInformationStage() {
-		return VendorInformationStage;
-	}
+	public static Stage getCustomerInformationStage() { return CustomerInformationStage; }
+	public static void setCustomerInformationStage(Stage customerInformationStage) { CustomerInformationStage = customerInformationStage; }
 
-	public static void setVendorInformationStage(Stage vendorInfomationStage) {
-		VendorInformationStage = vendorInfomationStage;
-	}
-
-	public static Stage getEmpolyeeInformationStage() {
-		return EmpolyeeInformationStage;
-	}
-
-	public static void setEmpolyeeInformationStage(Stage empolyeeInformationStage) {
-		EmpolyeeInformationStage = empolyeeInformationStage;
-	}
-
-	public static Stage getCustomerInformationStage() {
-		return CustomerInformationStage;
-	}
-
-	public static void setCustomerInformationStage(Stage customerInformationStage) {
-		CustomerInformationStage = customerInformationStage;
-	}
-
-	public static Stage getUnsavedAlertBoxStage() {
-		return UnsavedAlertBoxStage;
-	}
-
-	public static void setUnsavedAlertBoxStage(Stage unsavedAlertBoxStage) {
-		UnsavedAlertBoxStage = unsavedAlertBoxStage;
-	}
+	public static Stage getUnsavedAlertBoxStage() { return UnsavedAlertBoxStage; }
+	public static void setUnsavedAlertBoxStage(Stage unsavedAlertBoxStage) { UnsavedAlertBoxStage = unsavedAlertBoxStage; }
 	
-	public static Stage getNullIdAlertBoxStage() {
-		return NullIdAlertBoxStage;
-	}
+	public static Stage getNullIdAlertBoxStage() { return NullIdAlertBoxStage; }
+	public static void setNullIdAlertBoxStage(Stage nullIdAlertBoxStage) { NullIdAlertBoxStage = nullIdAlertBoxStage; }
 
-	public static void setNullIdAlertBoxStage(Stage nullIdAlertBoxStage) {
-		NullIdAlertBoxStage = nullIdAlertBoxStage;
-	}
-
-	public static Stage getWarehouseSettingStage() {
-		return WarehouseSettingStage;
-	}
-
-	public static void setWarehouseSettingStage(Stage warehouseSettingStage) {
-		WarehouseSettingStage = warehouseSettingStage;
-	}
+	public static Stage getWarehouseSettingStage() { return WarehouseSettingStage; }
+	public static void setWarehouseSettingStage(Stage warehouseSettingStage) { WarehouseSettingStage = warehouseSettingStage; }
 
 	public static Stage getProductSettingStage() {
 		return productSettingStage;

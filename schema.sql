@@ -154,7 +154,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES ('15','','','','',0,0,0,0,''),('24','番茄','','','',0,0,0,0,'');
+INSERT INTO `product` VALUES ('aa','','','','',50,0,0,0,''),('bb','你媽','','','',50,0,0,0,'生菜供應商');
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -182,8 +182,39 @@ CREATE TABLE `productstoreinwarehouse` (
 
 LOCK TABLES `productstoreinwarehouse` WRITE;
 /*!40000 ALTER TABLE `productstoreinwarehouse` DISABLE KEYS */;
-INSERT INTO `productstoreinwarehouse` VALUES ('24','123456',200);
+INSERT INTO `productstoreinwarehouse` VALUES ('aa','A002',50),('bb','A002',50);
 /*!40000 ALTER TABLE `productstoreinwarehouse` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `purchase`
+--
+
+DROP TABLE IF EXISTS `purchase`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `purchase` (
+  `PurchaseID` varchar(10) NOT NULL,
+  `VendorID` varchar(10) DEFAULT NULL,
+  `ProductID` varchar(10) NOT NULL,
+  `WarehouseID` varchar(10) NOT NULL,
+  `CostPrice` int DEFAULT NULL,
+  `Amount` int DEFAULT NULL,
+  PRIMARY KEY (`PurchaseID`,`WarehouseID`,`ProductID`),
+  KEY `WarehouseID_idx` (`WarehouseID`),
+  KEY `ProductID_idx` (`ProductID`),
+  CONSTRAINT `ProductID1` FOREIGN KEY (`ProductID`) REFERENCES `product` (`ProductID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `WarehouseID1` FOREIGN KEY (`WarehouseID`) REFERENCES `warehouse` (`WarehouseID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `purchase`
+--
+
+LOCK TABLES `purchase` WRITE;
+/*!40000 ALTER TABLE `purchase` DISABLE KEYS */;
+/*!40000 ALTER TABLE `purchase` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -216,7 +247,7 @@ CREATE TABLE `vendorinformation` (
 
 LOCK TABLES `vendorinformation` WRITE;
 /*!40000 ALTER TABLE `vendorinformation` DISABLE KEYS */;
-INSERT INTO `vendorinformation` VALUES ('123','00000000','aaa','','','','','','','','',''),('321','00000000','bbb','','','','','','','','','');
+INSERT INTO `vendorinformation` VALUES ('001','','生菜供應商','','','','','','','','','');
 /*!40000 ALTER TABLE `vendorinformation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -243,7 +274,7 @@ CREATE TABLE `warehouse` (
 
 LOCK TABLES `warehouse` WRITE;
 /*!40000 ALTER TABLE `warehouse` DISABLE KEYS */;
-INSERT INTO `warehouse` VALUES ('123456','my warehouse','','','');
+INSERT INTO `warehouse` VALUES ('A002','M2','','',''),('A003','M3','','','');
 /*!40000 ALTER TABLE `warehouse` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -256,4 +287,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-06 19:40:28
+-- Dump completed on 2021-05-10 17:16:36

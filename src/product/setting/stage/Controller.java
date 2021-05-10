@@ -23,8 +23,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
+import product.purchase.stage.Purchase;
 
 public class Controller implements Initializable {
+	
+	private static Stage PurchaseStage;
+	//private static Stage SellStage;
 	
 	@FXML
 	private TextField TextField_search;
@@ -76,6 +80,10 @@ public class Controller implements Initializable {
 	private Button Button_newSpace;
 	@FXML
 	private Button Button_deleteSpace;
+	@FXML
+	private Button Button_purchaseButton;
+	@FXML
+	private Button Button_sellButton;
 	
 	private ResultSet resultsetForProductTable;
 	
@@ -872,4 +880,18 @@ public class Controller implements Initializable {
 			return "0";
 		}
     }
+	
+	@FXML
+	public void purchaseButtonClicked() throws Exception {
+		setPurchaseStage(new Stage());
+		new Purchase().launchScene(getPurchaseStage());
+	}
+	
+	public static Stage getPurchaseStage() { return PurchaseStage; }
+	public static void setPurchaseStage(Stage purchaseStage) { PurchaseStage = purchaseStage; }
+
+	@FXML
+	public void sellButtonClicked() {
+		
+	}
 }
