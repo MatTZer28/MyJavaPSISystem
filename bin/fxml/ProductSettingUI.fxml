@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -14,7 +20,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #252525;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="product.setting.stage.Controller">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #252525;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="product.setting.stage.Controller">
    <children>
       <ToolBar prefHeight="40.0" prefWidth="200.0">
          <items>
@@ -91,16 +97,22 @@
                </graphic>
             </Button>
             <Region prefHeight="34.0" prefWidth="26.0" />
-            <Label alignment="CENTER" style="-fx-font-size: 20;" text="查詢">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Label>
-            <TextField fx:id="TextField_search" prefHeight="29.0" prefWidth="195.0">
+            <TextField fx:id="TextField_search" prefHeight="29.0" prefWidth="195.0" promptText="產品查詢">
                <font>
                   <Font size="14.0" />
                </font>
             </TextField>
+            <Region prefHeight="34.0" prefWidth="26.0" />
+            <Button minHeight="45.0" mnemonicParsing="false" prefWidth="200.0" style="-fx-font-size: 25;" text="進貨">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Button>
+            <Button minHeight="45.0" mnemonicParsing="false" prefWidth="200.0" style="-fx-font-size: 25;" text="銷貨">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Button>
          </items>
          <padding>
             <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
@@ -121,7 +133,7 @@
                         <TableColumn fx:id="TableColumn_type" prefWidth="185.0" sortable="false" text="類型" />
                         <TableColumn fx:id="TableColumn_unit" prefWidth="185.0" sortable="false" text="單位" />
                         <TableColumn fx:id="TableColumn_total" prefWidth="185.0" sortable="false" text="庫存總計" />
-                        <TableColumn fx:id="TableColumn_cost" prefWidth="185.0" sortable="false" text="成本" />
+                        <TableColumn fx:id="TableColumn_cost" prefWidth="185.0" sortable="false" text="總成本" />
                         <TableColumn fx:id="TableColumn_sellPrice" prefWidth="185.0" sortable="false" text="售價" />
                         <TableColumn fx:id="TableColumn_safeAmount" prefWidth="185.0" sortable="false" text="安全量" />
                         <TableColumn fx:id="TableColumn_vendor" prefWidth="185.0" sortable="false" text="供應廠商" />
@@ -138,7 +150,7 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </HBox.margin>
             </VBox>
-            <VBox layoutX="20.0" layoutY="20.0" prefHeight="678.0" prefWidth="309.0" HBox.hgrow="SOMETIMES">
+            <VBox layoutX="20.0" layoutY="20.0" prefHeight="678.0" prefWidth="309.0" spacing="5.0" HBox.hgrow="SOMETIMES">
                <children>
                   <TableView fx:id="TableView_warehouseTable" disable="true" VBox.vgrow="ALWAYS">
                      <VBox.margin>
@@ -184,7 +196,7 @@
                         </Button>
                      </children>
                      <VBox.margin>
-                        <Insets top="10.0" />
+                        <Insets />
                      </VBox.margin>
                   </HBox>
                </children>

@@ -97,12 +97,7 @@
                </graphic>
             </Button>
             <Region prefHeight="34.0" prefWidth="26.0" />
-            <Label alignment="CENTER" style="-fx-font-size: 20;" text="查詢">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Label>
-            <TextField fx:id="TextField_search" prefHeight="29.0" prefWidth="195.0">
+            <TextField fx:id="TextField_search" prefHeight="29.0" prefWidth="195.0" promptText="倉庫查詢">
                <font>
                   <Font size="14.0" />
                </font>
