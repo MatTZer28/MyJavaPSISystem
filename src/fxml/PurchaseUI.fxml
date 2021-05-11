@@ -108,7 +108,7 @@
       </ToolBar>
       <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0" VBox.vgrow="ALWAYS">
          <children>
-            <TableView fx:id="TableView_purchaseTable" prefHeight="200.0" prefWidth="600.0">
+            <TableView fx:id="TableView_purchaseTable" onMouseClicked="#purchaseTableOnClicked" prefHeight="200.0" prefWidth="600.0">
               <columns>
                 <TableColumn fx:id="TableColumn_purchaseId" prefWidth="75.0" sortable="false" text="進貨單號" />
                   <TableColumn fx:id="TableColumn_vendorId" prefWidth="75.0" sortable="false" text="廠商編號" />
@@ -120,7 +120,7 @@
             </TableView>
             <VBox>
                <children>
-                  <TableView fx:id="TableView_productTable" disable="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                  <TableView fx:id="TableView_productTable" onMouseClicked="#productTableOnClicked" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                     <columns>
                       <TableColumn fx:id="TableColumn_productId" prefWidth="199.0" sortable="false" text="產品編號" />
                     </columns>

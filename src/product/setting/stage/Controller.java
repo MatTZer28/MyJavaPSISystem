@@ -484,6 +484,8 @@ public class Controller implements Initializable {
     	Button_deleteButton.setDisable(true);
     	Button_editButton.setDisable(true);
     	Button_leaveButton.setDisable(true);
+    	Button_purchaseButton.setDisable(true);
+    	Button_sellButton.setDisable(true);
     	TextField_search.setDisable(true);
 	}
 	
@@ -586,6 +588,8 @@ public class Controller implements Initializable {
     	Button_deleteButton.setDisable(true);
     	Button_editButton.setDisable(true);
     	Button_leaveButton.setDisable(true);
+    	Button_purchaseButton.setDisable(true);
+    	Button_sellButton.setDisable(true);
     	TextField_search.setDisable(true);
 	}
 
@@ -618,6 +622,8 @@ public class Controller implements Initializable {
     	Button_deleteButton.setDisable(false);
     	Button_editButton.setDisable(false);
     	Button_leaveButton.setDisable(false);
+    	Button_purchaseButton.setDisable(false);
+    	Button_sellButton.setDisable(false);
     	TextField_search.setDisable(false);
     	
     	Button_saveButton.setDisable(true);
@@ -698,7 +704,6 @@ public class Controller implements Initializable {
         	statement.setString(20, TableView_productTable.getItems().get(i).getVendor().getValue());
         	statement.execute();
         	statement.close();
-        	resultsetForProductTable.next();
 		}
     }
     
@@ -761,6 +766,8 @@ public class Controller implements Initializable {
     	Button_deleteButton.setDisable(false);
     	Button_editButton.setDisable(false);
     	Button_leaveButton.setDisable(false);
+    	Button_purchaseButton.setDisable(false);
+    	Button_sellButton.setDisable(false);
     	TextField_search.setDisable(false);
     	
     	Button_saveButton.setDisable(true);
