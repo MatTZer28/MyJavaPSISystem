@@ -310,7 +310,7 @@ public class Controller implements Initializable{
 	@FXML
 	public void purchaseTableOnClicked() {
 		String vendorName = getPurchaseTableSelectedVendorNameWithNullPointerException();
-		if (!vendorName.equals("")) {
+		if (!vendorName.equals("") && !vendorName.equals("0")) {
 			if (isSaved == true) Button_deleteButton.setDisable(false);
 			setProductTableItemsByVendorName(vendorName);
 		}
@@ -618,8 +618,10 @@ public class Controller implements Initializable{
     			}
     			else {
     				for (int j = 0; j < observableListMap.get(keyValue).size(); j++) {
+    					
+    					
         				PreparedStatement statement = main.Main.getConnection().prepareStatement("UPDATE javaclassproject2021.purchase SET PurchaseID = ?, VendorID = ?, ProductID = ?, WarehouseID = ?, CostPrice = ?, Amount = ? "
-        						+ "WHERE PurchaseID = ? AND VendorID = ? AND ProductID = ?");
+        						+ "WHERE PurchaseID = ? AND ProductID = ? AND WarehouseID = ?");
                 		statement.setString(1, TableView_purchaseTable.getItems().get(i).getPurchaseId());            		
                 		statement.setString(2, TableView_purchaseTable.getItems().get(i).getVendorId().getValue());
                 		statement.setString(3, resultsetForProductTable.getString(1));
@@ -627,16 +629,17 @@ public class Controller implements Initializable{
                 		statement.setInt(5, Integer.parseInt(observableListMap.get(keyValue).get(j).getCostPrice()));
                 		statement.setInt(6, Integer.parseInt(observableListMap.get(keyValue).get(j).getAmount()));
                 		statement.setString(7, resultsetForPurchaseTable.getString(1));
-                		statement.setString(8, TableView_purchaseTable.getItems().get(i).getVendorId().getValue());
-                		statement.setString(9, resultsetForProductTable.getString(1));
-                		//TODO Duplicate entry '123-A001-001' for key 'purchase.PRIMARY'
+                		statement.setString(8, resultsetForProductTable.getString(1));
+                		statement.setString(9, observableListMap.get(keyValue).get(j).getWarehouseId());
                 		statement.execute();
                     	statement.close();
         			}
     			}
     		} while (resultsetForProductTable.next());
-    		if (resultsetForPurchaseTable.next()) isPurchaseReultsetEnd = false;
+    		if (i < TableView_purchaseTable.getItems().size() - 2) resultsetForPurchaseTable.next();
     	}
+    	
+    	if (resultsetForPurchaseTable.next()) isPurchaseReultsetEnd = false;
     	
     	if (isPurchaseReultsetEnd == false) {
     		retriveDataFromDBForProductTableWithSQLExceptionByVendorName(TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getVendorName());
@@ -655,7 +658,7 @@ public class Controller implements Initializable{
     			else {
     				for (int j = 0; j < observableListMap.get(keyValue).size(); j++) {
         				PreparedStatement statement = main.Main.getConnection().prepareStatement("UPDATE javaclassproject2021.purchase SET PurchaseID = ?, VendorID = ?, ProductID = ?, WarehouseID = ?, CostPrice = ?, Amount = ? "
-        						+ "WHERE PurchaseID = ? AND VendorID = ? AND ProductID = ?");
+        						+ "WHERE PurchaseID = ? AND ProductID = ?  AND WarehouseID = ?");
                 		statement.setString(1, TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getPurchaseId());
                 		statement.setString(2, TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getVendorId().getValue());
                 		statement.setString(3, resultsetForProductTable.getString(1));
@@ -663,8 +666,8 @@ public class Controller implements Initializable{
                 		statement.setInt(5, Integer.parseInt(observableListMap.get(keyValue).get(j).getCostPrice()));
                 		statement.setInt(6, Integer.parseInt(observableListMap.get(keyValue).get(j).getAmount()));
                 		statement.setString(7, resultsetForPurchaseTable.getString(1));
-                		statement.setString(8, TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getVendorId().getValue());
-                		statement.setString(9, resultsetForProductTable.getString(1));
+                		statement.setString(8, resultsetForProductTable.getString(1));
+                		statement.setString(9, observableListMap.get(keyValue).get(j).getWarehouseId());
                 		statement.execute();
                     	statement.close();
         			}
@@ -704,7 +707,6 @@ public class Controller implements Initializable{
     			}
     		} while (resultsetForProductTable.next());
     	}
-    	
     }
 	
 	@FXML
