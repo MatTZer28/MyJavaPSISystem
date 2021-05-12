@@ -309,7 +309,12 @@ public class Controller implements Initializable{
 	
 	@FXML
 	public void purchaseTableOnClicked() {
-		setProductTableItemsByVendorName(getPurchaseTableSelectedVendorNameWithNullPointerException());
+		String vendorName = getPurchaseTableSelectedVendorNameWithNullPointerException();
+		if (!vendorName.equals("")) {
+			if (isSaved == true) Button_deleteButton.setDisable(false);
+			setProductTableItemsByVendorName(vendorName);
+		}
+		TableView_warehouseTable.setItems(FXCollections.observableArrayList());
 	}
 	
 	public String getPurchaseTableSelectedVendorNameWithNullPointerException() {
@@ -322,7 +327,7 @@ public class Controller implements Initializable{
 	
 	@FXML
 	public void productTableOnClicked() {
-		String keyValue = getPurchaseTableSelectedVendorNameWithNullPointerException() + getProductTableSelectedIdWithNullPointerException();
+		String keyValue = TableView_purchaseTable.getSelectionModel().getSelectedItem().getPurchaseId() + getProductTableSelectedIdWithNullPointerException();
 		if (isSaved == false) {
 			if (observableListMap.containsKey(keyValue)) {
 				TableView_warehouseTable.setDisable(false);
@@ -424,8 +429,8 @@ public class Controller implements Initializable{
 		
 		public void retriveDataFromDBForWarehouseData() throws SQLException {
 			PreparedStatement statement = main.Main.getConnection().prepareStatement("SELECT CostPrice, Amount FROM javaclassproject2021.purchase WHERE PurchaseID = ? AND ProductID = ? AND WarehouseID = ?");
-			statement.setString(1, getPurchaseTableSelectedVendorNameWithNullPointerException());
-			statement.setString(2, getProductTableSelectedIdWithNullPointerException());
+			statement.setString(1, TableView_purchaseTable.getSelectionModel().getSelectedItem().getPurchaseId());
+			statement.setString(2, TableView_productTable.getSelectionModel().getSelectedItem().getProductId());
 			statement.setString(3, this.warehouseId);
 			resultsetForWarehouseData = statement.executeQuery();
 		}
@@ -512,13 +517,36 @@ public class Controller implements Initializable{
     }
 
 	@FXML
-	public void deleteButtonClicked() {
-		
+	public void deleteButtonClicked() throws SQLException {
+		TableView_warehouseTable.setItems(FXCollections.observableArrayList());
+		TableView_productTable.setItems(FXCollections.observableArrayList());
+		PreparedStatement delStatement = main.Main.getConnection().prepareStatement("DELETE FROM javaclassproject2021.purchase WHERE  PurchaseID = ?");
+    	delStatement.setString(1, TableView_purchaseTable.getSelectionModel().getSelectedItem().getPurchaseId());
+    	delStatement.execute();
+    	delStatement.close();
+    	
+    	setPurchaseTableItems();
 	}
 	 
 	@FXML
 	public void editButtonClicked() {
+		TableView_purchaseTable.setEditable(true);
+		 TableView_warehouseTable.setEditable(true);
 		 
+		 isSaved = false;
+		 
+		 createTextFieldToPerchaseTableColumn();
+		 createTextFieldToWarehouseTableColumn();
+		 
+		 Button_saveButton.setDisable(false);
+		 Button_quitButton.setDisable(false);
+		 setChoiceBoxInPurchaseTableEnable();
+		 
+		 Button_insertButton.setDisable(true);
+		 Button_deleteButton.setDisable(true);
+		 Button_editButton.setDisable(true);
+		 Button_leaveButton.setDisable(true);
+		 TextField_search.setDisable(true);
 	}
 	
 	@FXML
@@ -577,23 +605,34 @@ public class Controller implements Initializable{
     	for (int i = 0; i < TableView_purchaseTable.getItems().size() - 1; i++) {
     		retriveDataFromDBForProductTableWithSQLExceptionByVendorName(TableView_purchaseTable.getItems().get(i).getVendorName());
     		do {
-    			String keyValue = TableView_purchaseTable.getItems().get(i).getVendorName() + resultsetForProductTable.getString(1);
-    			if (observableListMap.containsKey(keyValue) == false) continue;
-    			for (int j = 0; j < observableListMap.get(keyValue).size(); j++) {
-    				PreparedStatement statement = main.Main.getConnection().prepareStatement("UPDATE javaclassproject2021.purchase SET PurchaseID = ?, VendorID = ?, ProductID = ?, WarehouseID = ?, CostPrice = ?, Amount = ? "
-    						+ "WHERE PurchaseID = ? AND VendorID = ? AND ProductID = ?");
-            		statement.setString(1, TableView_purchaseTable.getItems().get(i).getPurchaseId());
+    			String keyValue = TableView_purchaseTable.getItems().get(i).getPurchaseId() + resultsetForProductTable.getString(1);
+    			if (observableListMap.containsKey(keyValue) == false) {
+    				PreparedStatement statement = main.Main.getConnection().prepareStatement("UPDATE javaclassproject2021.purchase SET PurchaseID = ?, VendorID = ?"
+    						+ "WHERE PurchaseID = ? AND VendorID = ?");
+    				statement.setString(1, TableView_purchaseTable.getItems().get(i).getPurchaseId());
             		statement.setString(2, TableView_purchaseTable.getItems().get(i).getVendorId().getValue());
-            		statement.setString(3, resultsetForProductTable.getString(1));
-            		statement.setString(4, observableListMap.get(keyValue).get(j).getWarehouseId());
-            		statement.setInt(5, Integer.parseInt(observableListMap.get(keyValue).get(j).getCostPrice()));
-            		statement.setInt(6, Integer.parseInt(observableListMap.get(keyValue).get(j).getAmount()));
-            		statement.setString(7, resultsetForPurchaseTable.getString(1));
-            		statement.setString(8, TableView_purchaseTable.getItems().get(i).getVendorId().getValue());
-            		statement.setString(9, resultsetForProductTable.getString(1));
-            		//TODO Duplicate entry '123-A001-001' for key 'purchase.PRIMARY'
+            		statement.setString(3, resultsetForPurchaseTable.getString(1));
+            		statement.setString(4, TableView_purchaseTable.getItems().get(i).getVendorId().getValue());
             		statement.execute();
-                	statement.close();
+            		statement.close();
+    			}
+    			else {
+    				for (int j = 0; j < observableListMap.get(keyValue).size(); j++) {
+        				PreparedStatement statement = main.Main.getConnection().prepareStatement("UPDATE javaclassproject2021.purchase SET PurchaseID = ?, VendorID = ?, ProductID = ?, WarehouseID = ?, CostPrice = ?, Amount = ? "
+        						+ "WHERE PurchaseID = ? AND VendorID = ? AND ProductID = ?");
+                		statement.setString(1, TableView_purchaseTable.getItems().get(i).getPurchaseId());            		
+                		statement.setString(2, TableView_purchaseTable.getItems().get(i).getVendorId().getValue());
+                		statement.setString(3, resultsetForProductTable.getString(1));
+                		statement.setString(4, observableListMap.get(keyValue).get(j).getWarehouseId());
+                		statement.setInt(5, Integer.parseInt(observableListMap.get(keyValue).get(j).getCostPrice()));
+                		statement.setInt(6, Integer.parseInt(observableListMap.get(keyValue).get(j).getAmount()));
+                		statement.setString(7, resultsetForPurchaseTable.getString(1));
+                		statement.setString(8, TableView_purchaseTable.getItems().get(i).getVendorId().getValue());
+                		statement.setString(9, resultsetForProductTable.getString(1));
+                		//TODO Duplicate entry '123-A001-001' for key 'purchase.PRIMARY'
+                		statement.execute();
+                    	statement.close();
+        			}
     			}
     		} while (resultsetForProductTable.next());
     		if (resultsetForPurchaseTable.next()) isPurchaseReultsetEnd = false;
@@ -602,40 +641,66 @@ public class Controller implements Initializable{
     	if (isPurchaseReultsetEnd == false) {
     		retriveDataFromDBForProductTableWithSQLExceptionByVendorName(TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getVendorName());
     		do {
-    			String keyValue = TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getVendorName() + resultsetForProductTable.getString(1);
-    			if (observableListMap.containsKey(keyValue) == false) continue;
-    			for (int j = 0; j < observableListMap.get(keyValue).size(); j++) {
-    				PreparedStatement statement = main.Main.getConnection().prepareStatement("UPDATE javaclassproject2021.purchase SET PurchaseID = ?, VendorID = ?, ProductID = ?, WarehouseID = ?, CostPrice = ?, Amount = ? "
-    						+ "WHERE PurchaseID = ? AND VendorID = ? AND ProductID = ?");
-            		statement.setString(1, TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getPurchaseId());
+    			String keyValue = TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getPurchaseId() + resultsetForProductTable.getString(1);
+    			if (observableListMap.containsKey(keyValue) == false) {
+    				PreparedStatement statement = main.Main.getConnection().prepareStatement("UPDATE javaclassproject2021.purchase SET PurchaseID = ?, VendorID = ?"
+    						+ "WHERE PurchaseID = ? AND VendorID = ?");
+    				statement.setString(1, TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getPurchaseId());            		
             		statement.setString(2, TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getVendorId().getValue());
-            		statement.setString(3, resultsetForProductTable.getString(1));
-            		statement.setString(4, observableListMap.get(keyValue).get(j).getWarehouseId());
-            		statement.setInt(5, Integer.parseInt(observableListMap.get(keyValue).get(j).getCostPrice()));
-            		statement.setInt(6, Integer.parseInt(observableListMap.get(keyValue).get(j).getAmount()));
-            		statement.setString(7, resultsetForPurchaseTable.getString(1));
-            		statement.setString(8, TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getVendorId().getValue());
-            		statement.setString(9, resultsetForProductTable.getString(1));
+            		statement.setString(3, resultsetForPurchaseTable.getString(1));
+            		statement.setString(4, TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getVendorId().getValue());
             		statement.execute();
-                	statement.close();
+            		statement.close();
+    			}
+    			else {
+    				for (int j = 0; j < observableListMap.get(keyValue).size(); j++) {
+        				PreparedStatement statement = main.Main.getConnection().prepareStatement("UPDATE javaclassproject2021.purchase SET PurchaseID = ?, VendorID = ?, ProductID = ?, WarehouseID = ?, CostPrice = ?, Amount = ? "
+        						+ "WHERE PurchaseID = ? AND VendorID = ? AND ProductID = ?");
+                		statement.setString(1, TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getPurchaseId());
+                		statement.setString(2, TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getVendorId().getValue());
+                		statement.setString(3, resultsetForProductTable.getString(1));
+                		statement.setString(4, observableListMap.get(keyValue).get(j).getWarehouseId());
+                		statement.setInt(5, Integer.parseInt(observableListMap.get(keyValue).get(j).getCostPrice()));
+                		statement.setInt(6, Integer.parseInt(observableListMap.get(keyValue).get(j).getAmount()));
+                		statement.setString(7, resultsetForPurchaseTable.getString(1));
+                		statement.setString(8, TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getVendorId().getValue());
+                		statement.setString(9, resultsetForProductTable.getString(1));
+                		statement.execute();
+                    	statement.close();
+        			}
     			}
     		} while (resultsetForProductTable.next());
     	}
     	else {
     		retriveDataFromDBForProductTableWithSQLExceptionByVendorName(TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getVendorName());
     		do {
-    			String keyValue = TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getVendorName() + resultsetForProductTable.getString(1);
-    			if (observableListMap.containsKey(keyValue) == false) continue;
-    			for (int j = 0; j < observableListMap.get(keyValue).size(); j++) {
-    				PreparedStatement statement = main.Main.getConnection().prepareStatement("INSERT INTO javaclassproject2021.purchase VALUES (?, ?, ?, ?, ?, ?)");
-            		statement.setString(1, TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getPurchaseId());
-            		statement.setString(2, TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getVendorId().getValue());
-            		statement.setString(3, resultsetForProductTable.getString(1));
-            		statement.setString(4, observableListMap.get(keyValue).get(j).getWarehouseId());
-            		statement.setInt(5, Integer.parseInt(observableListMap.get(keyValue).get(j).getCostPrice()));
-            		statement.setInt(6, Integer.parseInt(observableListMap.get(keyValue).get(j).getAmount()));
-            		statement.execute();
-                	statement.close();
+    			String keyValue = TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getPurchaseId() + resultsetForProductTable.getString(1);
+    			if (observableListMap.containsKey(keyValue) == false) {
+    				retriveDataFromDBForWarehouseTableWithSQLExceptionByProductId(resultsetForProductTable.getString(1));
+    				do {
+    					PreparedStatement statement = main.Main.getConnection().prepareStatement("INSERT INTO javaclassproject2021.purchase VALUES (?, ?, ?, ?, ?, ?)");
+                		statement.setString(1, TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getPurchaseId());
+                		statement.setString(2, TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getVendorId().getValue());
+                		statement.setString(3, resultsetForProductTable.getString(1));
+                		statement.setString(4, resultsetForWarehouseTable.getString(1));
+                		statement.setInt(5, 0);
+                		statement.setInt(6, 0);
+                		statement.execute();
+                    	statement.close();
+    				} while (resultsetForWarehouseTable.next());
+    			}
+    			else {
+    				for (int j = 0; j < observableListMap.get(keyValue).size(); j++) {
+        				PreparedStatement statement = main.Main.getConnection().prepareStatement("INSERT INTO javaclassproject2021.purchase VALUES (?, ?, ?, ?, ?, ?)");
+                		statement.setString(1, TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getPurchaseId());
+                		statement.setString(2, TableView_purchaseTable.getItems().get(TableView_purchaseTable.getItems().size() - 1).getVendorId().getValue());
+                		statement.setString(3, resultsetForProductTable.getString(1));
+                		statement.setString(4, observableListMap.get(keyValue).get(j).getWarehouseId());
+                		statement.setInt(5, Integer.parseInt(observableListMap.get(keyValue).get(j).getCostPrice()));
+                		statement.setInt(6, Integer.parseInt(observableListMap.get(keyValue).get(j).getAmount()));
+                		statement.execute();
+                    	statement.close();
+        			}
     			}
     		} while (resultsetForProductTable.next());
     	}
@@ -652,6 +717,8 @@ public class Controller implements Initializable{
 		isSaved = true;
 		
 		TableView_purchaseTable.setEditable(false);
+		
+		setPurchaseTableItems();
 		 
 		isSaved = true;
 		
@@ -666,7 +733,10 @@ public class Controller implements Initializable{
 	}
 	
 	@FXML
-	public void leaveButtonClicked() {
-		
+	public void leaveButtonClicked() throws SQLException {
+		resultsetForPurchaseTable.close();
+		if (resultsetForProductTable != null) resultsetForProductTable.close();
+		if (resultsetForWarehouseTable != null) resultsetForWarehouseTable.close();
+		product.setting.stage.Controller.getPurchaseStage().close();
 	}
 }
