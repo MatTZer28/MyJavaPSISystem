@@ -96,6 +96,7 @@ public class Controller implements Initializable{
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		setStageDragable();
 		initTable();
+		addListenerToTextField_search();
 	}
 	
 	public void setStageDragable() {
@@ -139,15 +140,8 @@ public class Controller implements Initializable{
     	ObservableList<PurchaseDataForTable> purchases = FXCollections.observableArrayList();
     	try {
 			do {
-				if (purchases.size() == 0) {
 					PurchaseDataForTable purcheasData = new PurchaseDataForTable(resultsetForPurchaseTable.getString(1), resultsetForPurchaseTable.getString(2));
 					purchases.add(purcheasData);
-				}
-				else
-					if (!(resultsetForPurchaseTable.getString(1).equals(purchases.get(purchases.size() - 1).getPurchaseId()))) {
-						PurchaseDataForTable purcheasData = new PurchaseDataForTable(resultsetForPurchaseTable.getString(1), resultsetForPurchaseTable.getString(2));
-						purchases.add(purcheasData);
-					}
 			} while(resultsetForPurchaseTable.next());
 		} catch (SQLException e) {
 			return FXCollections.observableArrayList();
@@ -165,7 +159,7 @@ public class Controller implements Initializable{
 	
 	public void retriveDataFromDBForPurchaseTable() throws SQLException {
 		Statement statement = main.Main.getConnection().createStatement();
-    	resultsetForPurchaseTable = statement.executeQuery("SELECT PurchaseID, VendorID FROM javaclassproject2021.purchase");
+    	resultsetForPurchaseTable = statement.executeQuery("SELECT DISTINCT PurchaseID, VendorID FROM javaclassproject2021.purchase");
     	resultsetForPurchaseTable.next();
 	}
 	
@@ -306,6 +300,42 @@ public class Controller implements Initializable{
 		public String getProductId() { return productId; }
 		public void setProductId(String productId) { this.productId = productId; }
 	}
+	
+	public void addListenerToTextField_search() {
+    	TextField_search.textProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (newValue.equals("")) {
+					setPurchaseTableColumn();
+				}
+				else {
+					compareIdWithNewValueAndShowReslutToTable(newValue);
+				}
+			}
+		});
+    }
+	
+	public void compareIdWithNewValueAndShowReslutToTable(String targetValue) {
+    	TableView_purchaseTable.setItems(getComparedDataWtihTargetValue(targetValue));
+    	TableView_productTable.setItems(FXCollections.observableArrayList());
+    	TableView_warehouseTable.setItems(FXCollections.observableArrayList());
+    }
+	
+	public ObservableList<PurchaseDataForTable> getComparedDataWtihTargetValue(String targetValue) {
+    	retriveDataFromDBForPurchaseTableWithSQLException();
+    	ObservableList<PurchaseDataForTable> purchases = FXCollections.observableArrayList();
+    	try {
+			do {
+				if (resultsetForPurchaseTable.getString(1).contains(targetValue)) {
+					PurchaseDataForTable purcheasData = new PurchaseDataForTable(resultsetForPurchaseTable.getString(1), resultsetForPurchaseTable.getString(2));
+					purchases.add(purcheasData);
+				}
+			} while(resultsetForPurchaseTable.next());
+		} catch (SQLException e) {
+			return FXCollections.observableArrayList();
+		}
+		return purchases;
+    }
 	
 	@FXML
 	public void purchaseTableOnClicked() {
@@ -518,6 +548,30 @@ public class Controller implements Initializable{
 
 	@FXML
 	public void deleteButtonClicked() throws SQLException {
+		ResultSet amountResultSet;
+		
+		retriveDataFromDBForProductTableWithSQLExceptionByVendorName(TableView_purchaseTable.getSelectionModel().getSelectedItem().getVendorName());
+    	do {
+    		retriveDataFromDBForWarehouseTableWithSQLExceptionByProductId(resultsetForProductTable.getString(1));
+    		do {
+    			PreparedStatement retrieveAmountStatement = main.Main.getConnection().prepareStatement("SELECT Amount FROM javaclassproject2021.purchase WHERE PurchaseID = ? AND ProductID = ? AND WarehouseID = ?");
+    			retrieveAmountStatement.setString(1, TableView_purchaseTable.getSelectionModel().getSelectedItem().getPurchaseId());
+    			retrieveAmountStatement.setString(2, resultsetForProductTable.getString(1));
+    			retrieveAmountStatement.setString(3, resultsetForWarehouseTable.getString(1));
+    			amountResultSet = retrieveAmountStatement.executeQuery();
+    			if (amountResultSet.next()) {
+    				PreparedStatement updateStatement = main.Main.getConnection().prepareStatement("UPDATE javaclassproject2021.productstoreinwarehouse SET Amount = Amount - ? "
+        			    	+ "WHERE ProductID = ? AND WarehouseID = ?");
+        			updateStatement.setInt(1, amountResultSet.getInt(1));
+        			updateStatement.setString(2, resultsetForProductTable.getString(1));
+        			updateStatement.setString(3, resultsetForWarehouseTable.getString(1));
+        			updateStatement.execute();
+        			updateStatement.close();
+    			}		
+    			amountResultSet.close();
+    		} while (resultsetForWarehouseTable.next());
+    	} while (resultsetForProductTable.next());
+		
 		TableView_warehouseTable.setItems(FXCollections.observableArrayList());
 		TableView_productTable.setItems(FXCollections.observableArrayList());
 		PreparedStatement delStatement = main.Main.getConnection().prepareStatement("DELETE FROM javaclassproject2021.purchase WHERE  PurchaseID = ?");
@@ -542,9 +596,6 @@ public class Controller implements Initializable{
 		 Button_quitButton.setDisable(false);
 		 setChoiceBoxInPurchaseTableEnable();
 		 
-		 product.setting.stage.ProductSetting.getController().setProductTotalAmountWithSQLException();
-		 product.setting.stage.ProductSetting.getController().setProductTableItems();
-		 
 		 Button_insertButton.setDisable(true);
 		 Button_deleteButton.setDisable(true);
 		 Button_editButton.setDisable(true);
@@ -555,7 +606,7 @@ public class Controller implements Initializable{
 	@FXML
 	public void saveButtonClicked() {
 		for(PurchaseDataForTable rowItems : TableView_purchaseTable.getItems()) {
-    		if (rowItems.getPurchaseId() == "") {
+    		if (rowItems.getPurchaseId().equals("") || rowItems.getVendorId().getValue().equals("")) {
     			showNullIDAlertBoxWithException();
     			return;
     		}
@@ -569,8 +620,6 @@ public class Controller implements Initializable{
 		isSaved = true;
 		
 		updateTableDataToDBWithSQLException();
-		
-		
 		
 		Button_insertButton.setDisable(false);
 		Button_deleteButton.setDisable(false);
@@ -612,6 +661,7 @@ public class Controller implements Initializable{
     	retriveDataFromDBForPurchaseTableWithSQLException();
     	
     	for (int i = 0; i < TableView_purchaseTable.getItems().size() - 1; i++) {
+    		if (resultsetForPurchaseTable.getString(2).equals("")) continue;
     		retriveDataFromDBForProductTableWithSQLExceptionByVendorName(TableView_purchaseTable.getItems().get(i).getVendorName());
     		do {
     			String keyValue = TableView_purchaseTable.getItems().get(i).getPurchaseId() + resultsetForProductTable.getString(1);
@@ -669,9 +719,9 @@ public class Controller implements Initializable{
     		if (i < TableView_purchaseTable.getItems().size() - 2) resultsetForPurchaseTable.next();
     	}
     	
-    	if (TableView_purchaseTable.getItems().size() == 1) 
-    		if (resultsetForPurchaseTable.isAfterLast()) isPurchaseReultsetEnd = true;
-    		else isPurchaseReultsetEnd = false;
+    	if (TableView_purchaseTable.getItems().size() == 1)
+    		if (resultsetForPurchaseTable.isAfterLast()) isPurchaseReultsetEnd = false;
+    		else isPurchaseReultsetEnd = true;
     	else if (resultsetForPurchaseTable.next()) isPurchaseReultsetEnd = false;
     	
     	if (isPurchaseReultsetEnd == false) {
