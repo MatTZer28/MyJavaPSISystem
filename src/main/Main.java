@@ -21,7 +21,8 @@ public class Main extends Application {
 	private static Stage UnsavedAlertBoxStage;
 	private static Stage NullIdAlertBoxStage;
 	private static Stage WarehouseSettingStage;
-	private static Stage productSettingStage;
+	private static Stage ProductSettingStage;
+	private static Stage PurchaseStage;
 
 	private static Connection connection;
 	
@@ -62,13 +63,11 @@ public class Main extends Application {
 	public static Stage getWarehouseSettingStage() { return WarehouseSettingStage; }
 	public static void setWarehouseSettingStage(Stage warehouseSettingStage) { WarehouseSettingStage = warehouseSettingStage; }
 
-	public static Stage getProductSettingStage() {
-		return productSettingStage;
-	}
+	public static Stage getProductSettingStage() { return ProductSettingStage; }
+	public static void setProductSettingStage(Stage productSettingStage) { Main.ProductSettingStage = productSettingStage; }
 
-	public static void setProductSettingStage(Stage productSettingStage) {
-		Main.productSettingStage = productSettingStage;
-	}
+	public static Stage getPurchaseStage() { return PurchaseStage; }
+	public static void setPurchaseStage(Stage purchaseStage) { PurchaseStage = purchaseStage; }
 
 	public void createConnectionToMySQLDataBase() {
 		
