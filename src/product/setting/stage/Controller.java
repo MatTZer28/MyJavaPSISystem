@@ -329,7 +329,6 @@ public class Controller implements Initializable {
     
     public void compareIdWithNewValueAndShowReslutToTable(String targetValue) {
     	TableView_productTable.setItems(getComparedDataWtihTargetValue(targetValue));
-    	TableView_warehouseTable.setItems(FXCollections.observableArrayList());
     }
     
     public ObservableList<ProductDataForTable> getComparedDataWtihTargetValue(String targetValue) {
@@ -594,7 +593,7 @@ public class Controller implements Initializable {
 	@FXML
 	public void saveButtonClicked() {
 		for(ProductDataForTable rowItems : TableView_productTable.getItems()) {
-    		if (rowItems.getProductId().equals("")) {
+    		if (rowItems.getProductId() == "") {
     			showNullIDAlertBoxWithException();
     			return;
     		}

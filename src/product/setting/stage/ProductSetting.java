@@ -18,9 +18,11 @@ public class ProductSetting {
 	private Stage stage;
     private Scene scene;
     private FXMLLoader fxmlLoader;
+    private static product.setting.stage.Controller controller;
     
     public ProductSetting() throws Exception {
     	fxmlLoader = loadFxmlFileFrom("/fxml/ProductSettingUI.fxml");
+    	controller = fxmlLoader.getController();
     	loadFxmlToTargetSceneFromFxmlLoaderIOException();
     }
     
@@ -40,6 +42,14 @@ public class ProductSetting {
 	private void setSceneToScene() throws IOException {
     	scene = new Scene(( Parent) fxmlLoader.load());
     }
+
+	public static product.setting.stage.Controller getController() {
+		return controller;
+	}
+
+	public static void setController(product.setting.stage.Controller controller) {
+		ProductSetting.controller = controller;
+	}
 
 	public void launchScene(Stage stage) {
     	this.stage = stage;

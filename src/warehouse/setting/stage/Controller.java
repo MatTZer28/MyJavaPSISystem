@@ -376,7 +376,7 @@ public class Controller implements Initializable {
     public void saveButtonClicked(ActionEvent event) {
     	
     	for(WarehouseDataForTable rowItems : TableView_warehouseTable.getItems()) {
-    		if (rowItems.getWarehouseId().equals("")) {
+    		if (rowItems.getWarehouseId() == "") {
     			showNullIDAlertBoxWithException();
     			return;
     		}
