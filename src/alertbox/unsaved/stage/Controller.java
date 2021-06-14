@@ -4,7 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 public class Controller {
-	
+
 	private boolean isSaveAnswer = false;
 
 	@FXML
@@ -12,7 +12,7 @@ public class Controller {
 		isSaveAnswer = true;
 		main.Main.getUnsavedAlertBoxStage().close();
 	}
-	
+
 	@FXML
 	public void leaveButtonClicked(ActionEvent event) {
 		isSaveAnswer = false;

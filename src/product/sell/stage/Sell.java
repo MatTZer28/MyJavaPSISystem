@@ -1,4 +1,4 @@
-package product.purchase.stage;
+package product.sell.stage;
 
 import java.io.IOException;
 
@@ -14,14 +14,14 @@ import jfxtras.styles.jmetro.JMetro;
 import jfxtras.styles.jmetro.Style;
 import mainmenu.stage.MainMenu;
 
-public class Purchase {
+public class Sell {
 
 	private Stage stage;
 	private Scene scene;
 	private FXMLLoader fxmlLoader;
 
-	public Purchase() throws Exception {
-		fxmlLoader = loadFxmlFileFrom("/fxml/PurchaseUI.fxml");
+	public Sell() throws Exception {
+		fxmlLoader = loadFxmlFileFrom("/fxml/SellUI.fxml");
 		loadFxmlToTargetSceneFromFxmlLoaderIOException();
 	}
 

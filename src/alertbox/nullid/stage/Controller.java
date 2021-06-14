@@ -9,5 +9,5 @@ public class Controller {
 	public void confirmButtonClicked(ActionEvent event) {
 		main.Main.getNullIdAlertBoxStage().close();
 	}
-	
+
 }

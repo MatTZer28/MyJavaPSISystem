@@ -1,10 +1,10 @@
 package table.information;
 
 public class IdAndNameForTable {
-	
+
 	private String id;
 	private String name;
-	
+
 	public IdAndNameForTable(String id, String name) {
 		this.setId(id);
 		this.setName(name);

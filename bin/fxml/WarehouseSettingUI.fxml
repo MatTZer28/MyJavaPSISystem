@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -20,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #252525;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="warehouse.setting.stage.Controller">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #252525;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="warehouse.setting.stage.Controller">
    <children>
       <ToolBar prefHeight="40.0" prefWidth="200.0">
          <items>
@@ -141,9 +134,9 @@
                         <Insets />
                      </VBox.margin>
                      <columns>
-                        <TableColumn fx:id="TableColumn_pId" editable="false" prefWidth="88.0" sortable="false" text="產品編號" />
-                        <TableColumn fx:id="TableColumn_pName" editable="false" prefWidth="88.0" sortable="false" text="產品名稱" />
-                        <TableColumn fx:id="TableColumn_pUnit" editable="false" prefWidth="50.0" sortable="false" text="單位" />
+                        <TableColumn fx:id="TableColumn_pId" editable="false" prefWidth="83.99987947940826" sortable="false" text="產品編號" />
+                        <TableColumn fx:id="TableColumn_pName" editable="false" prefWidth="85.60009002685547" sortable="false" text="產品名稱" />
+                        <TableColumn fx:id="TableColumn_pUnit" editable="false" prefWidth="59.2000732421875" sortable="false" text="單位" />
                         <TableColumn fx:id="TableColumn_pInventory" editable="false" prefWidth="90.0" sortable="false" text="現有庫存" />
                      </columns>
                      <opaqueInsets>

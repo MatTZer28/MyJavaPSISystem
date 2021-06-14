@@ -125,9 +125,9 @@
                         <TableColumn fx:id="TableColumn_specification" prefWidth="337.0" sortable="false" text="產品規格" />
                         <TableColumn fx:id="TableColumn_type" prefWidth="185.0" sortable="false" text="類型" />
                         <TableColumn fx:id="TableColumn_unit" prefWidth="185.0" sortable="false" text="單位" />
+                        <TableColumn fx:id="TableColumn_cost" prefWidth="185.0" sortable="false" text="總成本" visible="false" />
+                        <TableColumn fx:id="TableColumn_sellPrice" prefWidth="185.0" sortable="false" text="售價" visible="false" />
                         <TableColumn fx:id="TableColumn_total" prefWidth="185.0" sortable="false" text="庫存總計" />
-                        <TableColumn fx:id="TableColumn_cost" prefWidth="185.0" sortable="false" text="總成本" />
-                        <TableColumn fx:id="TableColumn_sellPrice" prefWidth="185.0" sortable="false" text="售價" />
                         <TableColumn fx:id="TableColumn_safeAmount" prefWidth="185.0" sortable="false" text="安全量" />
                         <TableColumn fx:id="TableColumn_vendor" prefWidth="185.0" sortable="false" text="供應廠商" />
                      </columns>
