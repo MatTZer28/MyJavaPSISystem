@@ -22,7 +22,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import product.purchase.stage.Purchase;
 import product.sell.stage.Sell;
 
@@ -112,6 +114,23 @@ public class Controller implements Initializable {
 		TableColumn_type.setCellValueFactory(new PropertyValueFactory<>("type"));
 		TableColumn_unit.setCellValueFactory(new PropertyValueFactory<>("unit"));
 		TableColumn_total.setCellValueFactory(new PropertyValueFactory<>("total"));
+		TableColumn_total.setCellFactory(new Callback<TableColumn<ProductDataForTable,String>, TableCell<ProductDataForTable,String>>() {
+			@Override
+			public TableCell<ProductDataForTable, String> call(TableColumn<ProductDataForTable, String> param) {
+				return new TableCell<ProductDataForTable, String>() {
+					@Override
+	                public void updateItem(String item, boolean empty) {
+	                    super.updateItem(item, empty);
+	                    if (!isEmpty()) {
+	                        if(Integer.parseInt(item) < Integer.parseInt(TableView_productTable.getItems().get(super.getIndex()).getSafeAmount())) {
+	                        	this.setStyle("-fx-background-color: " + "red" + ";");
+	                        }
+	                        setText(item);
+	                    }	
+	                }
+				};
+			}
+		});
 		TableColumn_cost.setCellValueFactory(new PropertyValueFactory<>("cost"));
 		TableColumn_sellPrice.setCellValueFactory(new PropertyValueFactory<>("sellPrice"));
 		TableColumn_safeAmount.setCellValueFactory(new PropertyValueFactory<>("safeAmount"));
@@ -131,6 +150,10 @@ public class Controller implements Initializable {
 				Integer cost = resultsetForProductTable.getInt(7);
 				Integer sellPrice = resultsetForProductTable.getInt(8);
 				Integer safeAmount = resultsetForProductTable.getInt(9);
+				
+				if (total < safeAmount) {
+					
+				}
 
 				products.add(new ProductDataForTable(resultsetForProductTable.getString(1),
 						resultsetForProductTable.getString(2), resultsetForProductTable.getString(3),

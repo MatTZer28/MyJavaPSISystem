@@ -1,15 +1,21 @@
 package product.sell.stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
 import alertbox.nullid.stage.NullIDAlertBox;
+import excel.CreateSellExcelFile;
+import excel.SellDataItems;
+import javafx.animation.Interpolator;
+import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -17,7 +23,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
@@ -28,9 +37,19 @@ import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import javafx.animation.*;
 
 public class Controller implements Initializable {
+	
+	@FXML
+	private StackPane parentContainer;
+
+	@FXML
+	private AnchorPane anchorRoot;
 
 	@FXML
 	private Button Button_insertButton;
@@ -56,6 +75,12 @@ public class Controller implements Initializable {
 	private Button Button_newProduct;
 	@FXML
 	private Button Button_deleteProduct;
+	@FXML
+    private Button Button_sellRanking;
+	@FXML
+    private Button Button_printAll;
+    @FXML
+    private Button Button_printSingle;
 
 	@FXML
 	private TextField TextField_search;
@@ -136,6 +161,8 @@ public class Controller implements Initializable {
 		setCombineTableItems();
 		setUpProductTableItemMap();
 		addListenerToTextField_search();
+		createTextFieldToCombineTableColumn();
+		createTextFieldToProductTableColumn();
 	}
 
 	public void setStageDragable() {
@@ -229,7 +256,7 @@ public class Controller implements Initializable {
 	}
 
 	public void retriveSellCombineFromDBForSellCombineTable(String sellId) throws SQLException {
-		String sql = "SELECT CombineName, Amount FROM sellcombine WHERE SellID = ?";
+		String sql = "SELECT CombineName, Amount FROM javaclassproject2021.sellcombine WHERE SellID = ?";
 		PreparedStatement statement = main.Main.getConnection().prepareStatement(sql);
 		statement.setString(1, sellId);
 		resultSetForSellCombineTable = statement.executeQuery();
@@ -602,7 +629,7 @@ public class Controller implements Initializable {
 		public void updateCombineProductIdToDB(Number oldValue, Number newValue) {
 			try {
 				if (oldValue.intValue() == -1) {
-					String insertSql = "INSERT INTO combineproduct VALUES (?, ?, ?)";
+					String insertSql = "INSERT INTO javaclassproject2021.combineproduct VALUES (?, ?, ?)";
 					String combineName = TableView_combineTable.getSelectionModel().getSelectedItem().getCombineName();
 					String productId = this.productId.getItems().get(newValue.intValue());
 					String productAmount = getProductAmount() == "" ? "0" : getProductAmount();
@@ -612,7 +639,7 @@ public class Controller implements Initializable {
 					insertStatement.setInt(3, Integer.parseInt(productAmount));
 					insertStatement.execute();
 				} else if (oldValue != newValue) {
-					String updateSql = "UPDATE combineproduct SET ProductID = ? WHERE CombineName = ? AND ProductID = ?";
+					String updateSql = "UPDATE javaclassproject2021.combineproduct SET ProductID = ? WHERE CombineName = ? AND ProductID = ?";
 					String newProductId = this.productId.getItems().get(newValue.intValue());
 					String combineName = TableView_combineTable.getSelectionModel().getSelectedItem().getCombineName();
 					String oldProductId = this.productId.getItems().get(oldValue.intValue());
@@ -673,6 +700,7 @@ public class Controller implements Initializable {
 		Button_deleteButton.setDisable(true);
 		Button_editButton.setDisable(true);
 		Button_leaveButton.setDisable(true);
+		Button_printAll.setDisable(true);
 		TextField_search.setDisable(true);
 	}
 
@@ -714,6 +742,7 @@ public class Controller implements Initializable {
 					TableView_combineSellTable.setEditable(true);
 				}
 				if (isSaved == true) {
+					Button_printSingle.setDisable(false);
 					Button_deleteButton.setDisable(false);
 				}
 				if (sellId != oldSelectedSellId && oldSelectedSellId != null) {
@@ -766,7 +795,7 @@ public class Controller implements Initializable {
 					int combineProductAmount = Integer.parseInt(products.get(k).getProductAmount());
 					String combineProductId = products.get(k).getProductId().getValue();
 					String combineProductWarehouseId = products.get(k).getWarehouseId().getValue();
-					String updateProductStoreInWarehouseSql = "UPDATE productstoreinwarehouse SET Amount = Amount + ? WHERE ProductID = ? AND WarehouseID = ?";
+					String updateProductStoreInWarehouseSql = "UPDATE javaclassproject2021.productstoreinwarehouse SET Amount = Amount + ? WHERE ProductID = ? AND WarehouseID = ?";
 					PreparedStatement updateProductStoreInWarehouseStatement = main.Main.getConnection()
 							.prepareStatement(updateProductStoreInWarehouseSql);
 					updateProductStoreInWarehouseStatement.setInt(1, combineProductAmount * combineAmount);
@@ -782,7 +811,7 @@ public class Controller implements Initializable {
 
 	public void deleteSellFromDB() {
 		try {
-			String sql = "DELETE FROM sell WHERE SellID = ?";
+			String sql = "DELETE FROM javaclassproject2021.sell WHERE SellID = ?";
 			PreparedStatement statement = main.Main.getConnection().prepareStatement(sql);
 			statement.setString(1, TableView_sellTable.getSelectionModel().getSelectedItem().getSellId());
 			statement.execute();
@@ -810,6 +839,8 @@ public class Controller implements Initializable {
 		Button_deleteButton.setDisable(true);
 		Button_editButton.setDisable(true);
 		Button_leaveButton.setDisable(true);
+		Button_printAll.setDisable(true);
+		Button_printSingle.setDisable(true);
 		TextField_search.setDisable(true);
 	}
 
@@ -834,6 +865,7 @@ public class Controller implements Initializable {
 		Button_deleteButton.setDisable(false);
 		Button_editButton.setDisable(false);
 		Button_leaveButton.setDisable(false);
+		Button_printAll.setDisable(false);
 		TextField_search.setDisable(false);
 
 		Button_saveButton.setDisable(true);
@@ -851,10 +883,10 @@ public class Controller implements Initializable {
 	}
 
 	public void updateTableDataToDB() {
-		String sellUpdateSql = "UPDATE sell SET SellID = ?, CustomerID = ? WHERE SellID = ?";
-		String sellInsertSql = "INSERT INTO sell VALUES (?, ?)";
-		String sellCombineInsertSql = "INSERT INTO sellcombine VALUES (?, ?, ?)";
-		String sellCombineUpdateSql = "UPDATE sellcombine SET Amount = ? WHERE CombineName = ?";
+		String sellUpdateSql = "UPDATE javaclassproject2021.sell SET SellID = ?, CustomerID = ? WHERE SellID = ?";
+		String sellInsertSql = "INSERT INTO javaclassproject2021.sell VALUES (?, ?)";
+		String sellCombineInsertSql = "INSERT INTO javaclassproject2021.sellcombine VALUES (?, ?, ?)";
+		String sellCombineUpdateSql = "UPDATE javaclassproject2021.sellcombine SET Amount = ? WHERE CombineName = ?";
 		for (int i = 0; i < TableView_sellTable.getItems().size(); i++) {
 			try {
 				String sellId = TableView_sellTable.getItems().get(i).getSellId();
@@ -938,7 +970,7 @@ public class Controller implements Initializable {
 					int newCombineAmount = Integer.parseInt(sellCombines.get(j).getSellCombineAmount());
 					int oldCombineAmount = 0;
 
-					String getOldCombineAmountSql = "SELECT Amount FROM sellcombine WHERE SellID = ? AND CombineName = ?";
+					String getOldCombineAmountSql = "SELECT Amount FROM javaclassproject2021.sellcombine WHERE SellID = ? AND CombineName = ?";
 					PreparedStatement getOldCombineAmountStatement = main.Main.getConnection()
 							.prepareStatement(getOldCombineAmountSql);
 					getOldCombineAmountStatement.setString(1, sellId);
@@ -990,6 +1022,7 @@ public class Controller implements Initializable {
 		Button_deleteButton.setDisable(false);
 		Button_editButton.setDisable(false);
 		Button_leaveButton.setDisable(false);
+		Button_printAll.setDisable(false);
 		TextField_search.setDisable(false);
 
 		Button_saveButton.setDisable(true);
@@ -1105,7 +1138,7 @@ public class Controller implements Initializable {
 
 	public void deleteCombineFromDB() {
 		try {
-			String sql = "DELETE FROM combine WHERE CombineName = ?";
+			String sql = "DELETE FROM javaclassproject2021.combine WHERE CombineName = ?";
 			PreparedStatement statement = main.Main.getConnection().prepareStatement(sql);
 			statement.setString(1, TableView_combineTable.getSelectionModel().getSelectedItem().getCombineName());
 			statement.execute();
@@ -1149,7 +1182,7 @@ public class Controller implements Initializable {
 		for (int i = 0; i < TableView_combineTable.getItems().size(); i++) {
 			if (!TableView_combineTable.getItems().get(i).getCombineName().equals("")) {
 				try {
-					String sql = "INSERT INTO combine VALUES (?, ?)";
+					String sql = "INSERT INTO javaclassproject2021.combine VALUES (?, ?)";
 					String combineName = TableView_combineTable.getItems().get(i).getCombineName();
 					String combinePrice = TableView_combineTable.getItems().get(i).getCombinePrice() == "" ? "0"
 							: TableView_combineTable.getItems().get(i).getCombinePrice();
@@ -1159,7 +1192,7 @@ public class Controller implements Initializable {
 					statement.execute();
 				} catch (SQLException e) {
 					try {
-						String sql = "UPDATE combine SET CombinePrice = ? WHERE CombineName = ?";
+						String sql = "UPDATE javaclassproject2021.combine SET CombinePrice = ? WHERE CombineName = ?";
 						String combineName = TableView_combineTable.getItems().get(i).getCombineName();
 						String combinePrice = TableView_combineTable.getItems().get(i).getCombinePrice() == "" ? "0"
 								: TableView_combineTable.getItems().get(i).getCombinePrice();
@@ -1203,7 +1236,7 @@ public class Controller implements Initializable {
 	public void updateProductAmountToDB(String amount) {
 		try {
 			if (!TableView_productTable.getSelectionModel().getSelectedItem().getProductId().getValue().equals("")) {
-				String sql = "UPDATE combineproduct SET Amount = ? WHERE CombineName = ? AND ProductID = ?";
+				String sql = "UPDATE javaclassproject2021.combineproduct SET Amount = ? WHERE CombineName = ? AND ProductID = ?";
 				String CombineName = TableView_combineTable.getSelectionModel().getSelectedItem().getCombineName();
 				String ProductID = TableView_productTable.getSelectionModel().getSelectedItem().getProductId()
 						.getValue();
@@ -1229,7 +1262,7 @@ public class Controller implements Initializable {
 
 	public void deleteProductFromDB() {
 		try {
-			String sql = "DELETE FROM combineproduct WHERE CombineName = ? AND ProductID = ?";
+			String sql = "DELETE FROM javaclassproject2021.combineproduct WHERE CombineName = ? AND ProductID = ?";
 			PreparedStatement statement = main.Main.getConnection().prepareStatement(sql);
 			statement.setString(1, TableView_combineTable.getSelectionModel().getSelectedItem().getCombineName());
 			statement.setString(2,
@@ -1246,4 +1279,91 @@ public class Controller implements Initializable {
 			Button_deleteProduct.setDisable(false);
 		}
 	}
+	
+	@FXML
+    void sellRankingClicked(ActionEvent event) throws IOException {
+		Parent root =(Parent ) FXMLLoader.load(getClass().getResource("/fxml/SellRankingUI.fxml"));
+		Scene scene = Button_sellRanking.getScene();
+		
+		root.translateXProperty().set(scene.getWidth());
+		parentContainer.getChildren().add(root);
+		
+		Timeline timeline = new Timeline();
+		KeyValue keyValue = new KeyValue(root.translateXProperty(), 0, Interpolator.EASE_IN);
+		KeyFrame keyFrame = new KeyFrame(Duration.millis(500), keyValue);
+		timeline.getKeyFrames().add(keyFrame);
+		timeline.setOnFinished(e -> {
+			parentContainer.getChildren().remove(anchorRoot);
+		});
+		timeline.play();
+    }
+	
+	@FXML
+    void printAllOnClick(ActionEvent event) {
+		try {
+			String sql = "SELECT sell.SellID, sell.CustomerID, "
+					+ "(SELECT Name FROM javaclassproject2021.customerinformation WHERE CustomerID = sell.CustomerID) CustomerName, "
+					+ "sellcombine.CombineName, sellcombine.Amount, combine.CombinePrice "
+					+ "FROM javaclassproject2021.sell, javaclassproject2021.sellcombine, javaclassproject2021.combine "
+					+ "WHERE sell.SellID = sellcombine.SellID AND sellcombine.CombineName = combine.CombineName "
+					+ "ORDER BY sell.SellID ASC";
+			PreparedStatement statement = main.Main.getConnection().prepareStatement(sql);
+			ResultSet resultSet = statement.executeQuery();
+			ArrayList<SellDataItems> data = new ArrayList<>();
+			while (resultSet.next()) {
+				String sellId = resultSet.getString(1);
+				String customerId = resultSet.getString(2);
+				String customerName = resultSet.getString(3);
+				String combineName = resultSet.getString(4);
+				String sellAmount = String.valueOf(resultSet.getInt(5));
+				String sellPrice = String.valueOf(resultSet.getInt(6));
+				String totalSellPrice = String.valueOf(resultSet.getInt(5) * resultSet.getInt(6));
+				data.add(new SellDataItems(sellId
+						, customerId
+						, customerName
+						, combineName
+						, sellAmount
+						, sellPrice
+						, totalSellPrice));
+			}
+			new CreateSellExcelFile(data);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    }
+
+    @FXML
+    void printSingleOnClick(ActionEvent event) {
+    	try {
+			String sql = "SELECT sell.SellID, sell.CustomerID, "
+					+ "(SELECT Name FROM javaclassproject2021.customerinformation WHERE CustomerID = sell.CustomerID) CustomerName, "
+					+ "sellcombine.CombineName, sellcombine.Amount, combine.CombinePrice "
+					+ "FROM javaclassproject2021.sell, javaclassproject2021.sellcombine, javaclassproject2021.combine "
+					+ "WHERE sell.SellID = sellcombine.SellID AND sellcombine.CombineName = combine.CombineName AND sell.SellID = ?"
+					+ "ORDER BY sell.SellID ASC";
+			PreparedStatement statement = main.Main.getConnection().prepareStatement(sql);
+			statement.setString(1, TableView_sellTable.getSelectionModel().getSelectedItem().getSellId());
+			ResultSet resultSet = statement.executeQuery();
+			ArrayList<SellDataItems> data = new ArrayList<>();
+			while (resultSet.next()) {
+				String sellId = resultSet.getString(1);
+				String customerId = resultSet.getString(2);
+				String customerName = resultSet.getString(3);
+				String combineName = resultSet.getString(4);
+				String sellAmount = String.valueOf(resultSet.getInt(5));
+				String sellPrice = String.valueOf(resultSet.getInt(6));
+				String totalSellPrice = String.valueOf(resultSet.getInt(5) * resultSet.getInt(6));
+				data.add(new SellDataItems(sellId
+						, customerId
+						, customerName
+						, combineName
+						, sellAmount
+						, sellPrice
+						, totalSellPrice));
+			}
+			new CreateSellExcelFile(data);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    }
 }

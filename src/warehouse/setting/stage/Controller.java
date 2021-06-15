@@ -5,9 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import alertbox.nullid.stage.NullIDAlertBox;
+import excel.CreateWarehouseExcelFile;
+import excel.WarehouseDataItems;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -64,6 +67,11 @@ public class Controller implements Initializable {
 	private Button Button_quitButton;
 	@FXML
 	private Button Button_leaveButton;
+	@FXML
+    private Button Button_printAll;
+    @FXML
+    private Button Button_printSingle;
+
 
 	private ResultSet resultsetForWarehouseTable;
 
@@ -287,6 +295,7 @@ public class Controller implements Initializable {
 						.equals(resultsetForWarehouseTable.getString(1))) {
 					Button_deleteButton.setDisable(false);
 					Button_editButton.setDisable(false);
+					Button_printSingle.setDisable(false);
 					break;
 				}
 			} while (resultsetForWarehouseTable.next());
@@ -357,6 +366,7 @@ public class Controller implements Initializable {
 		Button_deleteButton.setDisable(true);
 		Button_editButton.setDisable(true);
 		Button_leaveButton.setDisable(true);
+		Button_printAll.setDisable(true);
 		TextField_search.setDisable(true);
 	}
 
@@ -425,6 +435,8 @@ public class Controller implements Initializable {
 		Button_deleteButton.setDisable(true);
 		Button_editButton.setDisable(true);
 		Button_leaveButton.setDisable(true);
+		Button_printAll.setDisable(true);
+		Button_printSingle.setDisable(true);
 		TextField_search.setDisable(true);
 
 	}
@@ -451,6 +463,8 @@ public class Controller implements Initializable {
 		Button_deleteButton.setDisable(false);
 		Button_editButton.setDisable(false);
 		Button_leaveButton.setDisable(false);
+		Button_printAll.setDisable(false);
+		Button_printSingle.setDisable(false);
 		TextField_search.setDisable(false);
 
 		Button_saveButton.setDisable(true);
@@ -533,6 +547,7 @@ public class Controller implements Initializable {
 		Button_deleteButton.setDisable(false);
 		Button_editButton.setDisable(false);
 		Button_leaveButton.setDisable(false);
+		Button_printAll.setDisable(false);
 		TextField_search.setDisable(false);
 
 		Button_saveButton.setDisable(true);
@@ -546,4 +561,77 @@ public class Controller implements Initializable {
 			resultsetForProductTable.close();
 		main.Main.getWarehouseSettingStage().close();
 	}
+	
+	@FXML
+    void printAllOnClick(ActionEvent event) {
+		try {
+			String sql = "SELECT warehouse.WarehouseID, warehouse.Name, product.ProductID, product.Name, product.Specification, product.Type, product.Unit, productstoreinwarehouse.Amount, product.SafeAmount, product.VendorName "
+					+ "FROM javaclassproject2021.warehouse, javaclassproject2021.product, javaclassproject2021.productstoreinwarehouse";
+			PreparedStatement statement = main.Main.getConnection().prepareStatement(sql);
+			ResultSet resultSet = statement.executeQuery();
+			ArrayList<WarehouseDataItems> data = new ArrayList<>();
+			while (resultSet.next()) {
+				String warehouseId = resultSet.getString(1);
+				String warehouseName = resultSet.getString(2);
+				String productId = resultSet.getString(3);
+				String productName = resultSet.getString(4);
+				String productSpecification = resultSet.getString(5);
+				String productType = resultSet.getString(6);
+				String productUnit = resultSet.getString(7);
+				String productAmount = String.valueOf(resultSet.getInt(8));
+				String productSafeAmount = String.valueOf(resultSet.getInt(9));
+				String productVendorName = resultSet.getString(10);
+				data.add(new WarehouseDataItems(warehouseId
+						, warehouseName
+						, productId
+						, productName
+						, productSpecification
+						, productType
+						, productUnit
+						, productAmount
+						, productSafeAmount
+						, productVendorName));
+			}
+			new CreateWarehouseExcelFile(data);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    }
+
+    @FXML
+    void printSingleOnClick(ActionEvent event) {
+    	try {
+			String sql = "SELECT warehouse.WarehouseID, warehouse.Name, product.ProductID, product.Name, product.Specification, product.Type, product.Unit, productstoreinwarehouse.Amount, product.SafeAmount, product.VendorName "
+					+ "FROM javaclassproject2021.warehouse, javaclassproject2021.product, javaclassproject2021.productstoreinwarehouse WHERE warehouse.WarehouseID = ?";
+			PreparedStatement statement = main.Main.getConnection().prepareStatement(sql);
+			statement.setString(1, TableView_warehouseTable.getSelectionModel().getSelectedItem().getWarehouseId());
+			ResultSet resultSet = statement.executeQuery();
+			ArrayList<WarehouseDataItems> data = new ArrayList<>();
+			while (resultSet.next()) {
+				String warehouseId = resultSet.getString(1);
+				String warehouseName = resultSet.getString(2);
+				String productId = resultSet.getString(3);
+				String productName = resultSet.getString(4);
+				String productSpecification = resultSet.getString(5);
+				String productType = resultSet.getString(6);
+				String productUnit = resultSet.getString(7);
+				String productAmount = String.valueOf(resultSet.getInt(8));
+				String productSafeAmount = String.valueOf(resultSet.getInt(9));
+				String productVendorName = resultSet.getString(10);
+				data.add(new WarehouseDataItems(warehouseId
+						, warehouseName
+						, productId
+						, productName
+						, productSpecification
+						, productType
+						, productUnit
+						, productAmount
+						, productSafeAmount
+						, productVendorName));
+			}
+			new CreateWarehouseExcelFile(data);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    }
 }
