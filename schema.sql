@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 14, 2021 at 01:05 PM
+-- Generation Time: Jun 15, 2021 at 11:28 AM
 -- Server version: 10.4.19-MariaDB
 -- PHP Version: 7.3.28
 
@@ -32,13 +32,6 @@ CREATE TABLE `combine` (
   `CombinePrice` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `combine`
---
-
-INSERT INTO `combine` (`CombineName`, `CombinePrice`) VALUES
-('漢堡', 50);
-
 -- --------------------------------------------------------
 
 --
@@ -50,13 +43,6 @@ CREATE TABLE `combineproduct` (
   `ProductID` varchar(10) NOT NULL,
   `Amount` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `combineproduct`
---
-
-INSERT INTO `combineproduct` (`CombineName`, `ProductID`, `Amount`) VALUES
-('漢堡', 'MA', 5);
 
 -- --------------------------------------------------------
 
@@ -84,7 +70,7 @@ CREATE TABLE `companyinformation` (
 --
 
 INSERT INTO `companyinformation` (`ID`, `CompanyID`, `ChineseName`, `EnglishName`, `Manager`, `UniNumber`, `PhoneNumber`, `FaxNumber`, `ChineseAddress`, `EnglishAddress`, `EmailAddress`, `WebSiteAddress`) VALUES
-(1, '', '', '', '', '', '', '', '', '', '', '');
+(1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -107,13 +93,6 @@ CREATE TABLE `customerinformation` (
   `WebSiteAddress` varchar(200) DEFAULT NULL,
   `Comment` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `customerinformation`
---
-
-INSERT INTO `customerinformation` (`CustomerID`, `UniNumber`, `Name`, `InvoiceHeader`, `Manager`, `PhoneNumber`, `PhoneExtention`, `FaxNumber`, `CellPhoneNumber`, `Address`, `EmailAddress`, `WebSiteAddress`, `Comment`) VALUES
-('001', '', '張博皓', '', '', '', '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -158,19 +137,12 @@ CREATE TABLE `product` (
   `Specification` varchar(20) DEFAULT NULL,
   `Type` varchar(20) DEFAULT NULL,
   `Unit` varchar(5) DEFAULT NULL,
-  `Total` int(10) UNSIGNED DEFAULT NULL,
-  `Cost` int(10) UNSIGNED DEFAULT NULL,
-  `SellPrice` int(10) UNSIGNED DEFAULT NULL,
-  `SafeAmount` int(10) UNSIGNED DEFAULT NULL,
+  `Total` int(10) DEFAULT NULL,
+  `Cost` int(10) DEFAULT NULL,
+  `SellPrice` int(10) DEFAULT NULL,
+  `SafeAmount` int(10) DEFAULT NULL,
   `VendorName` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `product`
---
-
-INSERT INTO `product` (`ProductID`, `Name`, `Specification`, `Type`, `Unit`, `Total`, `Cost`, `SellPrice`, `SafeAmount`, `VendorName`) VALUES
-('MA', '紅茶', '', '', '', 0, 0, 0, 0, 'Matt');
 
 -- --------------------------------------------------------
 
@@ -183,13 +155,6 @@ CREATE TABLE `productstoreinwarehouse` (
   `WarehouseID` varchar(10) NOT NULL,
   `Amount` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `productstoreinwarehouse`
---
-
-INSERT INTO `productstoreinwarehouse` (`ProductID`, `WarehouseID`, `Amount`) VALUES
-('MA', '1', 0);
 
 -- --------------------------------------------------------
 
@@ -206,13 +171,6 @@ CREATE TABLE `purchase` (
   `Amount` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `purchase`
---
-
-INSERT INTO `purchase` (`PurchaseID`, `VendorID`, `ProductID`, `WarehouseID`, `CostPrice`, `Amount`) VALUES
-('P001', 'V1', 'MA', '1', 0, 50);
-
 -- --------------------------------------------------------
 
 --
@@ -223,13 +181,6 @@ CREATE TABLE `sell` (
   `SellID` varchar(10) NOT NULL,
   `CustomerID` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `sell`
---
-
-INSERT INTO `sell` (`SellID`, `CustomerID`) VALUES
-('S001', '001');
 
 -- --------------------------------------------------------
 
@@ -242,13 +193,6 @@ CREATE TABLE `sellcombine` (
   `CombineName` varchar(10) NOT NULL,
   `Amount` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `sellcombine`
---
-
-INSERT INTO `sellcombine` (`SellID`, `CombineName`, `Amount`) VALUES
-('S001', '漢堡', 10);
 
 -- --------------------------------------------------------
 
@@ -271,13 +215,6 @@ CREATE TABLE `vendorinformation` (
   `Comment` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `vendorinformation`
---
-
-INSERT INTO `vendorinformation` (`VendorID`, `UniNumber`, `Name`, `InvoiceHeader`, `Manager`, `PhoneNumber`, `PhoneExtention`, `FaxNumber`, `Address`, `EmailAddress`, `WebSiteAddress`, `Comment`) VALUES
-('V1', '', 'Matt', '', '', '', '', '', '', '', '', '');
-
 -- --------------------------------------------------------
 
 --
@@ -291,13 +228,6 @@ CREATE TABLE `warehouse` (
   `PhoneNumber` varchar(20) DEFAULT NULL,
   `FaxNumber` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `warehouse`
---
-
-INSERT INTO `warehouse` (`WarehouseID`, `Name`, `Address`, `PhoneNumber`, `FaxNumber`) VALUES
-('1', 'A', '', '', '');
 
 --
 -- Indexes for dumped tables
