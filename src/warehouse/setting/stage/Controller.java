@@ -464,7 +464,6 @@ public class Controller implements Initializable {
 		Button_editButton.setDisable(false);
 		Button_leaveButton.setDisable(false);
 		Button_printAll.setDisable(false);
-		Button_printSingle.setDisable(false);
 		TextField_search.setDisable(false);
 
 		Button_saveButton.setDisable(true);
