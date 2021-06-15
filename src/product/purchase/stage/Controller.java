@@ -610,6 +610,7 @@ public class Controller implements Initializable {
 		do {
 			retriveDataFromDBForWarehouseTableWithSQLExceptionByProductId(resultsetForProductTable.getString(1));
 			do {
+				if(resultsetForWarehouseTable.getRow() == 0) continue;
 				PreparedStatement retrieveAmountStatement = main.Main.getConnection().prepareStatement(
 						"SELECT Amount FROM javaclassproject2021.purchase WHERE PurchaseID = ? AND ProductID = ? AND WarehouseID = ?");
 				retrieveAmountStatement.setString(1,
@@ -897,6 +898,7 @@ public class Controller implements Initializable {
 					retriveDataFromDBForWarehouseTableWithSQLExceptionByProductId(
 							resultsetForProductTable.getString(1));
 					do {
+						if(resultsetForWarehouseTable.getRow() == 0) continue;
 						PreparedStatement statement = main.Main.getConnection().prepareStatement(
 								"INSERT INTO javaclassproject2021.purchase VALUES (?, ?, ?, ?, ?, ?)");
 						statement.setString(1, TableView_purchaseTable.getItems()
