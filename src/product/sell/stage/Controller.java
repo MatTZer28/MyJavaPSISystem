@@ -44,7 +44,7 @@ import javafx.util.Duration;
 import javafx.animation.*;
 
 public class Controller implements Initializable {
-	
+
 	@FXML
 	private StackPane parentContainer;
 
@@ -76,11 +76,11 @@ public class Controller implements Initializable {
 	@FXML
 	private Button Button_deleteProduct;
 	@FXML
-    private Button Button_sellRanking;
+	private Button Button_sellRanking;
 	@FXML
-    private Button Button_printAll;
-    @FXML
-    private Button Button_printSingle;
+	private Button Button_printAll;
+	@FXML
+	private Button Button_printSingle;
 
 	@FXML
 	private TextField TextField_search;
@@ -779,6 +779,12 @@ public class Controller implements Initializable {
 		TableView_sellTable.getItems().remove(item);
 		TableView_sellTable.setItems(sellTableItems);
 
+		product.setting.stage.Controller controller = mainmenu.stage.Controller.getProductSetting().getContorller();
+		controller.getTableView_warehouseTable().setItems(FXCollections.observableArrayList());
+		controller.setProductTotalAmountWithSQLException();
+		controller.updateProductTableDataToDBWithSQLException();
+		controller.setProductTableItems();
+
 		Button_deleteButton.setDisable(true);
 	}
 
@@ -858,6 +864,12 @@ public class Controller implements Initializable {
 		removeProductFromProductSetting();
 		updateTableDataToDB();
 		setChoiceBoxInSellTableDisable();
+
+		product.setting.stage.Controller controller = mainmenu.stage.Controller.getProductSetting().getContorller();
+		controller.getTableView_warehouseTable().setItems(FXCollections.observableArrayList());
+		controller.setProductTotalAmountWithSQLException();
+		controller.updateProductTableDataToDBWithSQLException();
+		controller.setProductTableItems();
 
 		isSaved = true;
 
@@ -965,36 +977,38 @@ public class Controller implements Initializable {
 			for (int i = 0; i < TableView_sellTable.getItems().size(); i++) {
 				String sellId = TableView_sellTable.getItems().get(i).getSellId();
 				ObservableList<CombineSellDataForTable> sellCombines = sellCombineTableItemMap.get(sellId);
-				for (int j = 0; j < sellCombines.size(); j++) {
-					String combineName = sellCombines.get(j).getSellCombineName().getValue();
-					int newCombineAmount = Integer.parseInt(sellCombines.get(j).getSellCombineAmount());
-					int oldCombineAmount = 0;
+				if (sellCombines != null) {
+					for (int j = 0; j < sellCombines.size(); j++) {
+						String combineName = sellCombines.get(j).getSellCombineName().getValue();
+						int newCombineAmount = Integer.parseInt(sellCombines.get(j).getSellCombineAmount());
+						int oldCombineAmount = 0;
 
-					String getOldCombineAmountSql = "SELECT Amount FROM javaclassproject2021.sellcombine WHERE SellID = ? AND CombineName = ?";
-					PreparedStatement getOldCombineAmountStatement = main.Main.getConnection()
-							.prepareStatement(getOldCombineAmountSql);
-					getOldCombineAmountStatement.setString(1, sellId);
-					getOldCombineAmountStatement.setString(2, combineName);
-					ResultSet getOldCombineAmountResultSet = getOldCombineAmountStatement.executeQuery();
-					if (getOldCombineAmountResultSet.next()) {
-						oldCombineAmount = getOldCombineAmountResultSet.getInt(1);
-					}
-					getOldCombineAmountResultSet.close();
+						String getOldCombineAmountSql = "SELECT Amount FROM javaclassproject2021.sellcombine WHERE SellID = ? AND CombineName = ?";
+						PreparedStatement getOldCombineAmountStatement = main.Main.getConnection()
+								.prepareStatement(getOldCombineAmountSql);
+						getOldCombineAmountStatement.setString(1, sellId);
+						getOldCombineAmountStatement.setString(2, combineName);
+						ResultSet getOldCombineAmountResultSet = getOldCombineAmountStatement.executeQuery();
+						if (getOldCombineAmountResultSet.next()) {
+							oldCombineAmount = getOldCombineAmountResultSet.getInt(1);
+						}
+						getOldCombineAmountResultSet.close();
 
-					int combineAmountDelta = newCombineAmount - oldCombineAmount;
+						int combineAmountDelta = newCombineAmount - oldCombineAmount;
 
-					ObservableList<ProductDataForTable> products = productTableItemMap.get(combineName);
-					for (int k = 0; k < products.size(); k++) {
-						int combineProductAmount = Integer.parseInt(products.get(k).getProductAmount());
-						String combineProductId = products.get(k).getProductId().getValue();
-						String combineProductWarehouseId = products.get(k).getWarehouseId().getValue();
-						String updateProductStoreInWarehouseSql = "UPDATE productstoreinwarehouse SET Amount = Amount - ? WHERE ProductID = ? AND WarehouseID = ?";
-						PreparedStatement updateProductStoreInWarehouseStatement = main.Main.getConnection()
-								.prepareStatement(updateProductStoreInWarehouseSql);
-						updateProductStoreInWarehouseStatement.setInt(1, combineProductAmount * combineAmountDelta);
-						updateProductStoreInWarehouseStatement.setString(2, combineProductId);
-						updateProductStoreInWarehouseStatement.setString(3, combineProductWarehouseId);
-						updateProductStoreInWarehouseStatement.execute();
+						ObservableList<ProductDataForTable> products = productTableItemMap.get(combineName);
+						for (int k = 0; k < products.size(); k++) {
+							int combineProductAmount = Integer.parseInt(products.get(k).getProductAmount());
+							String combineProductId = products.get(k).getProductId().getValue();
+							String combineProductWarehouseId = products.get(k).getWarehouseId().getValue();
+							String updateProductStoreInWarehouseSql = "UPDATE productstoreinwarehouse SET Amount = Amount - ? WHERE ProductID = ? AND WarehouseID = ?";
+							PreparedStatement updateProductStoreInWarehouseStatement = main.Main.getConnection()
+									.prepareStatement(updateProductStoreInWarehouseSql);
+							updateProductStoreInWarehouseStatement.setInt(1, combineProductAmount * combineAmountDelta);
+							updateProductStoreInWarehouseStatement.setString(2, combineProductId);
+							updateProductStoreInWarehouseStatement.setString(3, combineProductWarehouseId);
+							updateProductStoreInWarehouseStatement.execute();
+						}
 					}
 				}
 			}
@@ -1279,15 +1293,15 @@ public class Controller implements Initializable {
 			Button_deleteProduct.setDisable(false);
 		}
 	}
-	
+
 	@FXML
-    void sellRankingClicked(ActionEvent event) throws IOException {
-		Parent root =(Parent ) FXMLLoader.load(getClass().getResource("/fxml/SellRankingUI.fxml"));
+	void sellRankingClicked(ActionEvent event) throws IOException {
+		Parent root = (Parent) FXMLLoader.load(getClass().getResource("/fxml/SellRankingUI.fxml"));
 		Scene scene = Button_sellRanking.getScene();
-		
+
 		root.translateXProperty().set(scene.getWidth());
 		parentContainer.getChildren().add(root);
-		
+
 		Timeline timeline = new Timeline();
 		KeyValue keyValue = new KeyValue(root.translateXProperty(), 0, Interpolator.EASE_IN);
 		KeyFrame keyFrame = new KeyFrame(Duration.millis(500), keyValue);
@@ -1296,10 +1310,10 @@ public class Controller implements Initializable {
 			parentContainer.getChildren().remove(anchorRoot);
 		});
 		timeline.play();
-    }
-	
+	}
+
 	@FXML
-    void printAllOnClick(ActionEvent event) {
+	void printAllOnClick(ActionEvent event) {
 		try {
 			String sql = "SELECT sell.SellID, sell.CustomerID, "
 					+ "(SELECT Name FROM javaclassproject2021.customerinformation WHERE CustomerID = sell.CustomerID) CustomerName, "
@@ -1318,23 +1332,18 @@ public class Controller implements Initializable {
 				String sellAmount = String.valueOf(resultSet.getInt(5));
 				String sellPrice = String.valueOf(resultSet.getInt(6));
 				String totalSellPrice = String.valueOf(resultSet.getInt(5) * resultSet.getInt(6));
-				data.add(new SellDataItems(sellId
-						, customerId
-						, customerName
-						, combineName
-						, sellAmount
-						, sellPrice
-						, totalSellPrice));
+				data.add(new SellDataItems(sellId, customerId, customerName, combineName, sellAmount, sellPrice,
+						totalSellPrice));
 			}
 			new CreateSellExcelFile(data);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-    }
+	}
 
-    @FXML
-    void printSingleOnClick(ActionEvent event) {
-    	try {
+	@FXML
+	void printSingleOnClick(ActionEvent event) {
+		try {
 			String sql = "SELECT sell.SellID, sell.CustomerID, "
 					+ "(SELECT Name FROM javaclassproject2021.customerinformation WHERE CustomerID = sell.CustomerID) CustomerName, "
 					+ "sellcombine.CombineName, sellcombine.Amount, combine.CombinePrice "
@@ -1353,17 +1362,12 @@ public class Controller implements Initializable {
 				String sellAmount = String.valueOf(resultSet.getInt(5));
 				String sellPrice = String.valueOf(resultSet.getInt(6));
 				String totalSellPrice = String.valueOf(resultSet.getInt(5) * resultSet.getInt(6));
-				data.add(new SellDataItems(sellId
-						, customerId
-						, customerName
-						, combineName
-						, sellAmount
-						, sellPrice
-						, totalSellPrice));
+				data.add(new SellDataItems(sellId, customerId, customerName, combineName, sellAmount, sellPrice,
+						totalSellPrice));
 			}
 			new CreateSellExcelFile(data);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-    }
+	}
 }

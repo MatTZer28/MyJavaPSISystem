@@ -1017,4 +1017,8 @@ public class Controller implements Initializable {
 		main.Main.setSellStage(new Stage());
 		new Sell().launchScene(main.Main.getSellStage());
 	}
+
+	public TableView<ProdouctStoreInWarehouseDataForTable> getTableView_warehouseTable() {
+		return TableView_warehouseTable;
+	}
 }

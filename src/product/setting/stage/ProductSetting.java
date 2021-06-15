@@ -40,6 +40,10 @@ public class ProductSetting {
 	private void setSceneToScene() throws IOException {
 		scene = new Scene((Parent) fxmlLoader.load());
 	}
+	
+	public product.setting.stage.Controller getContorller() {
+		return fxmlLoader.getController();
+	}
 
 	public void launchScene(Stage stage) {
 		this.stage = stage;

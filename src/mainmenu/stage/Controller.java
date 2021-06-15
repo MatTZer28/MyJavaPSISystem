@@ -34,6 +34,8 @@ public class Controller implements Initializable {
 
 	@FXML
 	private ToolBar ToolBar_toolBar;
+	
+	private static ProductSetting productSetting;
 
 	private boolean isMaximize = true;
 
@@ -111,7 +113,8 @@ public class Controller implements Initializable {
 	@FXML
 	public void productSettingButtonClicked(ActionEvent event) throws Exception {
 		main.Main.setProductSettingStage(new Stage());
-		new ProductSetting().launchScene(main.Main.getProductSettingStage());
+		productSetting = new ProductSetting();
+		productSetting.launchScene(main.Main.getProductSettingStage());
 	}
 
 	@FXML
@@ -193,5 +196,9 @@ public class Controller implements Initializable {
 	@FXML
 	public void minimizeButtonMousePressed() {
 		Button_minimizeButton.setImage(new Image("/resources/windowsIcon/Minimize-Pressed.png"));
+	}
+
+	public static ProductSetting getProductSetting() {
+		return productSetting;
 	}
 }

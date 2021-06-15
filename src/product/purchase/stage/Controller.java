@@ -640,6 +640,12 @@ public class Controller implements Initializable {
 		delStatement.close();
 
 		setPurchaseTableItems();
+		
+		product.setting.stage.Controller controller = mainmenu.stage.Controller.getProductSetting().getContorller();
+		controller.getTableView_warehouseTable().setItems(FXCollections.observableArrayList());
+		controller.setProductTotalAmountWithSQLException();
+		controller.updateProductTableDataToDBWithSQLException();
+		controller.setProductTableItems();
 	}
 
 	@FXML
@@ -681,6 +687,12 @@ public class Controller implements Initializable {
 
 		updateTableDataToDBWithSQLException();
 		setChoiceBoxInPurchaseTableDisable();
+		
+		product.setting.stage.Controller controller = mainmenu.stage.Controller.getProductSetting().getContorller();
+		controller.getTableView_warehouseTable().setItems(FXCollections.observableArrayList());
+		controller.setProductTotalAmountWithSQLException();
+		controller.updateProductTableDataToDBWithSQLException();
+		controller.setProductTableItems();
 
 		Button_insertButton.setDisable(false);
 		Button_deleteButton.setDisable(false);
