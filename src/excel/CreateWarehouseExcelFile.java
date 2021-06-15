@@ -65,10 +65,11 @@ public class CreateWarehouseExcelFile {
 			DirectoryChooser chooser = new DirectoryChooser();
 			chooser.setTitle("報表輸出");
 			File selectedDirectory = chooser.showDialog(new Stage());
-			
-			FileOutputStream fileOutputStream = new FileOutputStream(selectedDirectory.getAbsolutePath() + "\\庫存報表.xlsx");
-			workbook.write(fileOutputStream);
-			fileOutputStream.close();
+			if (selectedDirectory != null) {
+				FileOutputStream fileOutputStream = new FileOutputStream(selectedDirectory.getAbsolutePath() + "\\庫存報表.xlsx");
+				workbook.write(fileOutputStream);
+				fileOutputStream.close();
+			}
 			workbook.close();
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -250,9 +250,9 @@ public class Controller implements Initializable {
 		try {
 			do {
 				if (resultsetForTable.getString(1).contains(targetValue)
-						|| resultsetForTable.getString(3).contains(targetValue)) {
+						|| resultsetForTable.getString(2).contains(targetValue)) {
 					companys.add(new table.information.IdAndNameForTable(resultsetForTable.getString(1),
-							resultsetForTable.getString(3)));
+							resultsetForTable.getString(2)));
 				}
 			} while (resultsetForTable.next());
 		} catch (SQLException e) {
@@ -462,7 +462,7 @@ public class Controller implements Initializable {
 
 		InputStream inputStream = getAvatarImage();
 		statement.setBlob(22, inputStream);
-
+		
 		statement.execute();
 		statement.close();
 

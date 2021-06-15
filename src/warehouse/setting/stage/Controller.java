@@ -564,8 +564,8 @@ public class Controller implements Initializable {
 	@FXML
     void printAllOnClick(ActionEvent event) {
 		try {
-			String sql = "SELECT warehouse.WarehouseID, warehouse.Name, product.ProductID, product.Name, product.Specification, product.Type, product.Unit, productstoreinwarehouse.Amount, product.SafeAmount, product.VendorName "
-					+ "FROM javaclassproject2021.warehouse, javaclassproject2021.product, javaclassproject2021.productstoreinwarehouse";
+			String sql = "SELECT warehouse.WarehouseID, warehouse.Name, productstoreinwarehouse.ProductID, productstoreinwarehouse.Amount, product.Name, product.Specification, product.Type, product.Unit, product.SafeAmount, product.VendorName "
+					+ "FROM warehouse, productstoreinwarehouse, product WHERE warehouse.WarehouseID = productstoreinwarehouse.WarehouseID AND product.ProductID = productstoreinwarehouse.ProductID";
 			PreparedStatement statement = main.Main.getConnection().prepareStatement(sql);
 			ResultSet resultSet = statement.executeQuery();
 			ArrayList<WarehouseDataItems> data = new ArrayList<>();
@@ -573,11 +573,11 @@ public class Controller implements Initializable {
 				String warehouseId = resultSet.getString(1);
 				String warehouseName = resultSet.getString(2);
 				String productId = resultSet.getString(3);
-				String productName = resultSet.getString(4);
-				String productSpecification = resultSet.getString(5);
-				String productType = resultSet.getString(6);
-				String productUnit = resultSet.getString(7);
-				String productAmount = String.valueOf(resultSet.getInt(8));
+				String productName = resultSet.getString(5);
+				String productSpecification = resultSet.getString(6);
+				String productType = resultSet.getString(7);
+				String productUnit = resultSet.getString(8);
+				String productAmount = String.valueOf(resultSet.getInt(4));
 				String productSafeAmount = String.valueOf(resultSet.getInt(9));
 				String productVendorName = resultSet.getString(10);
 				data.add(new WarehouseDataItems(warehouseId
@@ -600,8 +600,9 @@ public class Controller implements Initializable {
     @FXML
     void printSingleOnClick(ActionEvent event) {
     	try {
-			String sql = "SELECT warehouse.WarehouseID, warehouse.Name, product.ProductID, product.Name, product.Specification, product.Type, product.Unit, productstoreinwarehouse.Amount, product.SafeAmount, product.VendorName "
-					+ "FROM javaclassproject2021.warehouse, javaclassproject2021.product, javaclassproject2021.productstoreinwarehouse WHERE warehouse.WarehouseID = ?";
+			String sql = "SELECT warehouse.WarehouseID, warehouse.Name, productstoreinwarehouse.ProductID, productstoreinwarehouse.Amount, product.Name, product.Specification, product.Type, product.Unit, product.SafeAmount, product.VendorName "
+					+ "FROM warehouse, productstoreinwarehouse, product WHERE warehouse.WarehouseID = productstoreinwarehouse.WarehouseID AND product.ProductID = productstoreinwarehouse.ProductID "
+					+ "AND warehouse.WarehouseID = ?";
 			PreparedStatement statement = main.Main.getConnection().prepareStatement(sql);
 			statement.setString(1, TableView_warehouseTable.getSelectionModel().getSelectedItem().getWarehouseId());
 			ResultSet resultSet = statement.executeQuery();
@@ -610,11 +611,11 @@ public class Controller implements Initializable {
 				String warehouseId = resultSet.getString(1);
 				String warehouseName = resultSet.getString(2);
 				String productId = resultSet.getString(3);
-				String productName = resultSet.getString(4);
-				String productSpecification = resultSet.getString(5);
-				String productType = resultSet.getString(6);
-				String productUnit = resultSet.getString(7);
-				String productAmount = String.valueOf(resultSet.getInt(8));
+				String productName = resultSet.getString(5);
+				String productSpecification = resultSet.getString(6);
+				String productType = resultSet.getString(7);
+				String productUnit = resultSet.getString(8);
+				String productAmount = String.valueOf(resultSet.getInt(4));
 				String productSafeAmount = String.valueOf(resultSet.getInt(9));
 				String productVendorName = resultSet.getString(10);
 				data.add(new WarehouseDataItems(warehouseId

@@ -767,7 +767,12 @@ public class Controller implements Initializable {
 						ResultSet oldAmountValueResultSet;
 						oldAmountValueResultSet = statementOldAmountValue.executeQuery();
 						oldAmountValueResultSet.next();
-						oldAmountValue = oldAmountValueResultSet.getInt(1);
+						if (oldAmountValueResultSet.getRow() == 0) {
+							oldAmountValue = 0;
+						}
+						else {
+							oldAmountValue = oldAmountValueResultSet.getInt(1);
+						}
 						oldAmountValueResultSet.close();
 
 						PreparedStatement statement = main.Main.getConnection().prepareStatement(

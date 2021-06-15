@@ -44,15 +44,15 @@ public class CreateSellExcelFile {
 			}
 			
 			int rowCount = 1;
-			for (SellDataItems wItem : data) {
+			for (SellDataItems sItem : data) {
 				Row row = sheet.createRow(rowCount++);
-				row.createCell(0).setCellValue(wItem.getSellId());
-				row.createCell(1).setCellValue(wItem.getCustomerId());
-				row.createCell(2).setCellValue(wItem.getCustomerName());
-				row.createCell(3).setCellValue(wItem.getCombineName());
-				row.createCell(4).setCellValue(wItem.getSellAmount());
-				row.createCell(5).setCellValue(wItem.getSellPrice());
-				row.createCell(6).setCellValue(wItem.getTotalSellPrice());
+				row.createCell(0).setCellValue(sItem.getSellId());
+				row.createCell(1).setCellValue(sItem.getCustomerId());
+				row.createCell(2).setCellValue(sItem.getCustomerName());
+				row.createCell(3).setCellValue(sItem.getCombineName());
+				row.createCell(4).setCellValue(sItem.getSellAmount());
+				row.createCell(5).setCellValue(sItem.getSellPrice());
+				row.createCell(6).setCellValue(sItem.getTotalSellPrice());
 			}
 			
 			for (int i = 0; i < columnHeadings.length; i++) {
@@ -63,9 +63,11 @@ public class CreateSellExcelFile {
 			chooser.setTitle("報表輸出");
 			File selectedDirectory = chooser.showDialog(new Stage());
 			
-			FileOutputStream fileOutputStream = new FileOutputStream(selectedDirectory.getAbsolutePath() + "\\銷貨報表.xlsx");
-			workbook.write(fileOutputStream);
-			fileOutputStream.close();
+			if (selectedDirectory != null) {
+				FileOutputStream fileOutputStream = new FileOutputStream(selectedDirectory.getAbsolutePath() + "\\庫存報表.xlsx");
+				workbook.write(fileOutputStream);
+				fileOutputStream.close();
+			}
 			workbook.close();
 		} catch (Exception e) {
 			e.printStackTrace();
