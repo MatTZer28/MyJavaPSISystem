@@ -352,7 +352,7 @@ public class Controller implements Initializable {
 		ObservableList<PurchaseDataForTable> purchases = FXCollections.observableArrayList();
 		try {
 			do {
-				if (resultsetForPurchaseTable.getString(1).contains(targetValue)) {
+				if (resultsetForPurchaseTable.getString(1).contains(targetValue) || resultsetForPurchaseTable.getString(2).contains(targetValue)) {
 					PurchaseDataForTable purcheasData = new PurchaseDataForTable(resultsetForPurchaseTable.getString(1),
 							resultsetForPurchaseTable.getString(2));
 					purchases.add(purcheasData);
@@ -645,6 +645,8 @@ public class Controller implements Initializable {
 		controller.getTableView_warehouseTable().setItems(FXCollections.observableArrayList());
 		controller.setProductTotalAmountWithSQLException();
 		controller.updateProductTableDataToDBWithSQLException();
+		controller.removeTextFieldAndUpdateProductTableCell();
+		controller.removeTextFieldAndUpdateWarehouseTableCell();
 		controller.setProductTableItems();
 	}
 
@@ -692,6 +694,8 @@ public class Controller implements Initializable {
 		controller.getTableView_warehouseTable().setItems(FXCollections.observableArrayList());
 		controller.setProductTotalAmountWithSQLException();
 		controller.updateProductTableDataToDBWithSQLException();
+		controller.removeTextFieldAndUpdateProductTableCell();
+		controller.removeTextFieldAndUpdateWarehouseTableCell();
 		controller.setProductTableItems();
 
 		Button_insertButton.setDisable(false);

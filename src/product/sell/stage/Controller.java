@@ -495,7 +495,7 @@ public class Controller implements Initializable {
 		try {
 			retriveDataFromDBForSellTable();
 			while (resultSetForSellTable.next()) {
-				if (resultSetForSellTable.getString(1).contains(targetValue)) {
+				if (resultSetForSellTable.getString(1).contains(targetValue) || resultSetForSellTable.getString(2).contains(targetValue)) {
 					SellDataForTable sellData = new SellDataForTable(resultSetForSellTable.getString(1),
 							resultSetForSellTable.getString(2));
 					sells.add(sellData);
@@ -783,6 +783,8 @@ public class Controller implements Initializable {
 		controller.getTableView_warehouseTable().setItems(FXCollections.observableArrayList());
 		controller.setProductTotalAmountWithSQLException();
 		controller.updateProductTableDataToDBWithSQLException();
+		controller.removeTextFieldAndUpdateProductTableCell();
+		controller.removeTextFieldAndUpdateWarehouseTableCell();
 		controller.setProductTableItems();
 
 		Button_deleteButton.setDisable(true);
@@ -869,6 +871,8 @@ public class Controller implements Initializable {
 		controller.getTableView_warehouseTable().setItems(FXCollections.observableArrayList());
 		controller.setProductTotalAmountWithSQLException();
 		controller.updateProductTableDataToDBWithSQLException();
+		controller.removeTextFieldAndUpdateProductTableCell();
+		controller.removeTextFieldAndUpdateWarehouseTableCell();
 		controller.setProductTableItems();
 
 		isSaved = true;

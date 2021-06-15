@@ -988,22 +988,14 @@ public class Controller implements Initializable {
 	@FXML
 	public void deleteSpaceButtonClicked() throws SQLException {
 		PreparedStatement delStatement = main.Main.getConnection()
-				.prepareStatement("DELETE FROM javaclassproject2021.productstoreinwarehouse WHERE  WarehouseID = ?");
-		delStatement.setString(1, getWarehouseTableSelectedIdWithNullPointerException());
+				.prepareStatement("DELETE FROM javaclassproject2021.productstoreinwarehouse WHERE ProductID = ?");
+		delStatement.setString(1, getProductTableSelectedIdWithNullPointerException());
 		delStatement.execute();
 		delStatement.close();
 
 		setWarehouseTableItems();
 		setChoiceBoxInWarehouseTableEnable();
 		createTextFieldToWarehouseTableColumn();
-	}
-
-	public String getWarehouseTableSelectedIdWithNullPointerException() {
-		try {
-			return TableView_warehouseTable.getSelectionModel().getSelectedItem().getWarehouseId().getValue();
-		} catch (NullPointerException e) {
-			return "0";
-		}
 	}
 
 	@FXML
