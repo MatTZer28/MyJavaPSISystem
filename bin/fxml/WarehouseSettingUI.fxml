@@ -107,7 +107,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="Button_printSingle" mnemonicParsing="false" onAction="#printSingleOnClick" text="輸出倉庫庫存報表">
+            <Button fx:id="Button_printSingle" disable="true" mnemonicParsing="false" onAction="#printSingleOnClick" text="輸出倉庫庫存報表">
                <font>
                   <Font size="16.0" />
                </font>
