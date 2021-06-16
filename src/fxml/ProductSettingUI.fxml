@@ -90,7 +90,7 @@
                </graphic>
             </Button>
             <Region prefHeight="34.0" prefWidth="26.0" />
-            <TextField fx:id="TextField_search" prefHeight="29.0" prefWidth="195.0" promptText="產品查詢">
+            <TextField fx:id="TextField_search" prefHeight="29.0" prefWidth="195.0" promptText="產品查詢" visible="false">
                <font>
                   <Font size="14.0" />
                </font>
